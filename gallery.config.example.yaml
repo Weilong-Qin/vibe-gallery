@@ -1,0 +1,92 @@
+# ─── Profile ─────────────────────────────────────────────────────────
+profile:
+  name: "Your Name"
+  bio: "Full-stack developer building in the vibe coding era"
+  # bio_override: "Takes precedence over bio if set"
+  avatar: github           # 'github' or a direct URL
+  links:
+    github: "https://github.com/yourusername"
+    x: "https://x.com/yourusername"
+    linkedin: "https://linkedin.com/in/yourusername"
+    email: "you@example.com"
+    website: "https://example.com"
+
+# ─── Appearance ──────────────────────────────────────────────────────
+theme: terminal            # minimal | grid | magazine | terminal
+accent: "#00ff88"          # optional hex color
+
+layout:
+  page: sidebar            # single-column | sidebar | hero
+  projects: featured-first # grid | masonry | list | featured-first
+  columns: 2               # 1 | 2 | 3 | auto
+  density: comfortable     # compact | comfortable | spacious
+
+display:
+  stats: stars             # stars | milestones | none
+
+# ─── Resume ──────────────────────────────────────────────────────────
+resume:
+  sections: [skills, experience, education, projects]
+  skills:
+    - category: "Languages"
+      items: [TypeScript, Python, Go]
+    - category: "Frontend"
+      items: [React, Vite, TailwindCSS]
+  experience:
+    - company: "Acme Corp"
+      title: "Senior Engineer"
+      period: "2022 - Present"
+      location: "Remote"
+      highlights:
+        - "Built scalable microservices serving 10M+ daily users"
+        - "Led migration from monolith to event-driven architecture"
+  education:
+    - school: "University of Example"
+      degree: "B.S. Computer Science"
+      period: "2018 - 2022"
+
+# ─── Auto-import from GitHub ─────────────────────────────────────────
+import:
+  github: yourusername
+  exclude: [yourusername/dotfiles, yourusername/scratch]
+  min_stars: 0
+
+# ─── Explicit projects (any platform) ────────────────────────────────
+projects:
+  - github: owner/flagship-project
+    featured: true
+    demo_url: "https://demo.example.com"
+    screenshots:
+      - "https://example.com/screenshot1.png"
+    status: active          # active | wip | archived
+    display:
+      stats: milestones
+    override:
+      title: "My Best Project"
+      description: "Custom description here"
+      techStack: [TypeScript, React, PostgreSQL]
+      features:
+        - "Real-time collaboration"
+        - "Offline-first sync"
+      heroImage: "https://example.com/hero.png"
+
+  # Gitee
+  - gitee: owner/chinese-project
+    featured: false
+
+  # Aliyun Codeup
+  - codeup:
+      org: your-org
+      repo: internal-tool
+    status: wip
+
+  # Self-hosted Gitea
+  - gitea:
+      url: "https://git.example.com"
+      repo: owner/private-tool
+    demo_url: "https://tool.example.com"
+
+# ─── Sync schedule ───────────────────────────────────────────────────
+sync:
+  schedule: "0 6 * * 1"     # cron: weekly on Mondays at 06:00 UTC
+  on_push: true             # also rebuild when gallery.config.yaml changes

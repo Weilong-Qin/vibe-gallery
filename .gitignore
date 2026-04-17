@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Generated data
+src/app/data/gallery.json
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Cache
+.cache/
+
+# OS / editor
+.DS_Store
+*.log
+
+# Trellis local state
+.trellis/.developer

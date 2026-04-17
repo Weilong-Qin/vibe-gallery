@@ -1,0 +1,21 @@
+{
+  "name": "vibe-gallery",
+  "version": "0.1.0",
+  "description": "CLI for vibe-gallery: scaffold and preview a developer portfolio site",
+  "type": "module",
+  "bin": {
+    "vibe-gallery": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p .",
+    "dev": "tsx src/index.ts"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3"
+  }
+}

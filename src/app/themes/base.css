@@ -1,0 +1,54 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+code, pre {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+/* Density modifiers */
+[data-density="compact"] {
+  --space-md: 12px;
+  --space-lg: 18px;
+  --space-xl: 28px;
+  --space-2xl: 48px;
+  --card-padding: 12px;
+}
+
+[data-density="spacious"] {
+  --space-md: 20px;
+  --space-lg: 32px;
+  --space-xl: 56px;
+  --space-2xl: 88px;
+  --card-padding: 32px;
+}
+
+section + section {
+  margin-top: var(--space-xl);
+}
+
+aside > section + section,
+.page-root > section + section {
+  margin-top: var(--space-xl);
+}

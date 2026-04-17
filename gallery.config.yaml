@@ -1,0 +1,18 @@
+profile:
+  name: "Your Name"
+  bio: "Developer"
+  avatar: github
+  links:
+    github: "https://github.com/yourusername"
+
+theme: minimal
+
+layout:
+  page: single-column
+  projects: grid
+  columns: auto
+  density: comfortable
+
+projects:
+  - github: yourusername/example-project
+    featured: true

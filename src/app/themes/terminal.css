@@ -1,0 +1,31 @@
+[data-theme="terminal"] {
+  --color-bg: #0d1117;
+  --color-surface: #161b22;
+  --color-border: #30363d;
+  --color-text: #e6edf3;
+  --color-text-muted: #8b949e;
+  --color-text-inverse: #0d1117;
+  --color-accent-default: #00ff88;
+  --color-accent: var(--accent-override, var(--color-accent-default));
+
+  --font-sans: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Cascadia Code', monospace;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-size-base: 14px;
+  --font-size-sm: 12px;
+  --font-size-lg: 16px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 28px;
+  --font-size-hero: 40px;
+
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+  --space-2xl: 64px;
+
+  --card-radius: 4px;
+  --card-shadow: none;
+  --card-border: 1px solid var(--color-border);
+  --card-padding: var(--space-lg);
+}

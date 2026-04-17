@@ -1,0 +1,31 @@
+[data-theme="magazine"] {
+  --color-bg: #faf8f5;
+  --color-surface: #ffffff;
+  --color-border: #d4c9b5;
+  --color-text: #1a1a1a;
+  --color-text-muted: #6b6456;
+  --color-text-inverse: #ffffff;
+  --color-accent-default: #c2410c;
+  --color-accent: var(--accent-override, var(--color-accent-default));
+
+  --font-sans: 'Georgia', 'Times New Roman', serif;
+  --font-mono: 'Courier New', monospace;
+  --font-size-base: 17px;
+  --font-size-sm: 14px;
+  --font-size-lg: 19px;
+  --font-size-xl: 26px;
+  --font-size-2xl: 38px;
+  --font-size-hero: 60px;
+
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 28px;
+  --space-xl: 48px;
+  --space-2xl: 80px;
+
+  --card-radius: 0px;
+  --card-shadow: none;
+  --card-border: 2px solid var(--color-border);
+  --card-padding: var(--space-xl);
+}
