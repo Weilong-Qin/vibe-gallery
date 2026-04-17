@@ -99,6 +99,7 @@ const ImportConfigSchema = z.object({
   github: z.string().optional(),
   exclude: z.array(z.string()).optional(),
   min_stars: z.number().int().nonnegative().optional(),
+  exclude_forks: z.boolean().default(true),
 })
 
 // ── Root ─────────────────────────────────────────────────────────────

@@ -42,17 +42,19 @@ export function ProjectCard({ project }: { project: ProjectData }) {
         />
       )}
       <div style={{ padding: 'var(--card-padding)', flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)' }}>
-        <h3 style={{ fontSize: 'var(--font-size-xl)', color: 'var(--color-text)', fontWeight: 600 }}>
-          {project.title}
+        <h3 style={{ fontSize: 'var(--font-size-xl)', fontWeight: 600 }}>
+          <a
+            href={project.repoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: 'var(--color-text)', textDecoration: 'none' }}
+            onMouseOver={e => (e.currentTarget.style.color = 'var(--color-accent)')}
+            onMouseOut={e => (e.currentTarget.style.color = 'var(--color-text)')}
+          >
+            {project.title}
+          </a>
         </h3>
-        <p style={{
-          color: 'var(--color-text-muted)',
-          fontSize: 'var(--font-size-base)',
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden',
-        }}>
+        <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-base)', lineHeight: 1.6 }}>
           {project.description}
         </p>
         {project.techStack.length > 0 && (

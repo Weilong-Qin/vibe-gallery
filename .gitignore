@@ -21,3 +21,11 @@ src/app/data/gallery.json
 
 # Trellis local state
 .trellis/.developer
+
+# Claude Code / AI tooling (not part of project)
+.claude/
+.agents/
+skills-lock.json
+
+# Gallery build cache
+.gallery-cache.json

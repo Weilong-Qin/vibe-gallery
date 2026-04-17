@@ -77,6 +77,7 @@ export class GitHubProvider implements RepoProvider {
         language: data.language ?? undefined,
         defaultBranch,
         sha,
+        pushedAt: data.pushed_at ?? undefined,
       }
     } catch (err) {
       handleGitHubError(err, id.owner, id.repo)
@@ -117,12 +118,14 @@ export class GitHubProvider implements RepoProvider {
 
       const exclude = new Set(opts.exclude ?? [])
       const minStars = opts.minStars ?? 0
+      const excludeForks = opts.excludeForks ?? true
 
       return repos
         .filter((r) => {
           if (this.hasToken && r.owner?.login !== username) return false
           if (exclude.has(r.name)) return false
           if ((r.stargazers_count ?? 0) < minStars) return false
+          if (excludeForks && r.fork) return false
           return true
         })
         .map((r) => ({

@@ -13,9 +13,8 @@ export function StatsBar({ stats, display }: StatsBarProps) {
     return (
       <div style={{ display: 'flex', gap: 'var(--space-md)', color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)' }}>
         <span>⭐ {stats.stars.toLocaleString()}</span>
-        <span>🍴 {stats.forks.toLocaleString()}</span>
+        <span title="Forks">⑂ {stats.forks.toLocaleString()}</span>
         <span>👁 {stats.watchers.toLocaleString()}</span>
-        {stats.language && <span style={{ color: 'var(--color-accent)' }}>{stats.language}</span>}
       </div>
     )
   }

@@ -1,18 +1,37 @@
 profile:
-  name: "Your Name"
-  bio: "Developer"
+  name: "Weilong Qin"
+  bio: "Full-stack developer building in the vibe coding era"
   avatar: github
   links:
-    github: "https://github.com/yourusername"
+    github: "https://github.com/Weilong-Qin"
 
-theme: minimal
+theme: terminal
+accent: "#00ff88"
 
 layout:
-  page: single-column
-  projects: grid
-  columns: auto
+  page: sidebar
+  projects: featured-first
+  columns: 2
   density: comfortable
 
+display:
+  stats: stars
+
+resume:
+  sections: [skills, experience, education, projects]
+  skills: []
+  experience: []
+  education: []
+
+import:
+  github: Weilong-Qin
+  min_stars: 0
+
 projects:
-  - github: yourusername/example-project
+  - github: Weilong-Qin/vibe-gallery
     featured: true
+    status: active
+
+sync:
+  on_push: true
+  schedule: "0 6 * * 1"

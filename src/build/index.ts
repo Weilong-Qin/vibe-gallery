@@ -26,6 +26,14 @@ const ICON_MAP: Record<string, SocialLink['icon']> = {
   weibo: 'weibo',
 }
 
+function inferStatus(pushedAt?: string): 'active' | 'wip' | 'archived' {
+  if (!pushedAt) return 'active'
+  const monthsSince = (Date.now() - new Date(pushedAt).getTime()) / (1000 * 60 * 60 * 24 * 30)
+  if (monthsSince > 12) return 'archived'
+  if (monthsSince > 3) return 'wip'
+  return 'active'
+}
+
 function inferIcon(key: string): SocialLink['icon'] {
   return ICON_MAP[key.toLowerCase()] ?? 'website'
 }
@@ -146,7 +154,7 @@ async function fetchSingleProject(
       heroImage: finalExtracted.heroImage,
       demoUrl: projectConfig?.demo_url,
       screenshots: projectConfig?.screenshots ?? [],
-      status: projectConfig?.status ?? 'active',
+      status: projectConfig?.status ?? inferStatus(repoInfo.pushedAt),
       featured: projectConfig?.featured ?? false,
       display: { stats: displayStats },
     }
@@ -204,6 +212,7 @@ async function main(): Promise<void> {
       const imported = await provider.listUserRepos(config.import.github, {
         exclude: config.import.exclude ?? [],
         minStars: config.import.min_stars ?? 0,
+        excludeForks: config.import.exclude_forks ?? true,
       })
       const existing = new Set(identifiers.map((id) => projectKey(id)))
       for (const id of imported) {
@@ -224,7 +233,7 @@ async function main(): Promise<void> {
   console.log(`Found ${identifiers.length} repo(s) to process`)
 
   const extractor = createExtractor()
-  const limit = pLimit(5)
+  const limit = pLimit(2)
 
   const results = await Promise.all(
     identifiers.map((id) =>

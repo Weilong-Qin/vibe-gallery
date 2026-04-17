@@ -58,6 +58,7 @@ export interface ImportConfig {
   github?: string
   exclude?: string[]
   min_stars?: number
+  exclude_forks?: boolean  // default: true — skip forked repos
 }
 
 // ── Built data types (build output, consumed by frontend) ────────────
@@ -166,6 +167,7 @@ export interface RawRepoInfo {
   language?: string
   defaultBranch: string
   sha: string
+  pushedAt?: string  // ISO date, for activity-based status inference
 }
 
 export interface RawRelease {
@@ -177,4 +179,5 @@ export interface RawRelease {
 export interface ListReposOptions {
   exclude?: string[]
   minStars?: number
+  excludeForks?: boolean  // default: true
 }
