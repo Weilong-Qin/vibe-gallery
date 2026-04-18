@@ -1,49 +1,145 @@
+# ─── 个人信息 ─────────────────────────────────────────────────────────────────
 profile:
+  # 显示在页面上的姓名（必填）
   name: "Weilong Qin"
+
+  # 个人简介，显示在头像下方
+  # 若配置了 LLM，会根据项目内容自动生成；填写后作为 LLM 的参考输入
   bio: "Full-stack developer building in the vibe coding era"
+
+  # bio_override: "手动指定时优先于 AI 生成的简介，完全覆盖 bio 字段"
+
+  # 头像来源：填 github 自动拉取 GitHub 头像，也可填直链 URL
   avatar: github
+
+  # 社交链接，支持 github / x / linkedin / email / website / weibo
   links:
     github: "https://github.com/Weilong-Qin"
+    # x: "https://x.com/yourusername"
+    # linkedin: "https://linkedin.com/in/yourusername"
+    # email: "you@example.com"
+    # website: "https://yoursite.com"
 
+# ─── 语言 ─────────────────────────────────────────────────────────────────────
+# 控制两件事：① 页面所有 UI 标签的显示语言；② LLM 提取内容（描述、功能点）的输出语言
+# 可选值：en（英文）| zh（中文）
 language: zh
 
+# ─── 外观 ─────────────────────────────────────────────────────────────────────
+# 主题风格，可选：minimal（简洁）| grid（卡片）| magazine（杂志）| terminal（终端黑）
 theme: terminal
+
+# 强调色（十六进制），影响链接、高亮、边框等元素；不填则使用主题默认色
 accent: "#00ff88"
 
+# ─── 布局 ─────────────────────────────────────────────────────────────────────
 layout:
+  # 整体页面结构
+  # single-column：所有内容垂直堆叠
+  # sidebar：左侧个人信息/简历，右侧项目列表
+  # hero：顶部大图个人简介，下方项目区
   page: sidebar
+
+  # 项目卡片排列方式
+  # grid：等宽网格  masonry：瀑布流  list：列表  featured-first：精选项目占满首行
   projects: featured-first
+
+  # 列数：1 | 2 | 3 | auto（响应式自动）
   columns: 2
+
+  # 密度（卡片间距/内边距）：compact（紧凑）| comfortable（舒适）| spacious（宽松）
   density: comfortable
 
+# ─── 统计展示 ─────────────────────────────────────────────────────────────────
 display:
+  # 项目卡片底部显示的统计信息
+  # stars：显示 Star/Fork/Watch 数  milestones：显示 Release 历史  none：不显示
   stats: stars
 
+# ─── 简历 ─────────────────────────────────────────────────────────────────────
 resume:
+  # 简历分区顺序，可调整顺序或删除不需要的分区
   sections: [skills, experience, education, projects]
-  skills: []
-  experience: []
-  education: []
 
+  # 技能列表，每个 category 下填写 items
+  skills: []
+  # skills:
+  #   - category: "编程语言"
+  #     items: [TypeScript, Python, Go]
+  #   - category: "前端"
+  #     items: [React, Vite, TailwindCSS]
+
+  # 工作经历
+  experience: []
+  # experience:
+  #   - company: "某科技公司"
+  #     title: "高级工程师"
+  #     period: "2022 - 至今"
+  #     location: "远程"           # 可选
+  #     highlights:               # 可选，工作亮点列表
+  #       - "构建了服务日活 1000 万的微服务架构"
+
+  # 教育经历
+  education: []
+  # education:
+  #   - school: "某大学"
+  #     degree: "计算机科学 学士"
+  #     period: "2018 - 2022"
+
+# ─── 自动导入 GitHub 仓库 ──────────────────────────────────────────────────────
 import:
+  # 要导入仓库的 GitHub 用户名
   github: https://github.com/Weilong-Qin
+
+  # 过滤：Star 数低于此值的仓库不导入（0 表示不过滤）
   min_stars: 0
 
+  # 是否跳过 fork 来的仓库（默认 true，建议保持开启）
+  # exclude_forks: true
+
+  # 排除指定仓库，格式：owner/repo
+  # exclude: [Weilong-Qin/dotfiles, Weilong-Qin/scratch]
+
+# ─── 手动指定项目（支持多平台）────────────────────────────────────────────────
 projects:
   - github: Weilong-Qin/vibe-gallery
+    # 是否置顶为精选项目（在 featured-first 布局中占满首行）
     featured: true
+    # 手动指定项目状态：active（活跃）| wip（进行中）| archived（已归档）
+    # 不填则根据最近推送时间自动推断：3 个月内→active，3-12 个月→wip，超过 12 个月→archived
     status: active
-  - github: Weilong-Qin/vibe-pomo
-    featured: true
-    status: active  
-  - github: Weilong-Qin/figure-painter
-    featured: true
-    status: active
-  - github: Weilong-Qin/data_compress
-    featured: true
-    status: active
+    # demo_url: "https://demo.example.com"   # 演示地址，显示为卡片按钮
+    # screenshots:                           # 截图列表，显示在卡片内
+    #   - "https://example.com/screenshot.png"
+    # display:
+    #   stats: milestones                    # 覆盖全局 display.stats，此项目单独显示 Release 历史
+    # override:                              # 手动覆盖 LLM 提取的内容
+    #   title: "自定义标题"
+    #   description: "自定义描述"
+    #   techStack: [TypeScript, React]
+    #   features:
+    #     - "功能亮点 1"
+    #   heroImage: "https://example.com/hero.png"
 
+  # Gitee 仓库示例
+  # - gitee: owner/my-project
+
+  # 阿里云 Codeup 仓库示例
+  # - codeup:
+  #     org: your-org
+  #     repo: internal-tool
+
+  # 自托管 Gitea 仓库示例
+  # - gitea:
+  #     url: "https://git.example.com"
+  #     repo: owner/private-tool
+
+# ─── 同步计划 ─────────────────────────────────────────────────────────────────
 sync:
+  # 是否在 push 到 main 分支时自动触发构建
   on_push: true
+
+  # 定时触发完整构建（build-full）的 cron 表达式
+  # 默认每周一早 6 点（UTC）刷新 Star 数、发现新仓库等
   schedule: "0 6 * * 1"
 
