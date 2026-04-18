@@ -241,6 +241,18 @@ Layout is composed from four independent dimensions — pick one value from each
 
 Changing theme/layout only requires `build:assemble` (or pushing to trigger `build-config`).
 
+## Screenshot Showcase
+
+Different theme + layout combinations rendered from this project:
+
+| Minimal + Single-Column + Grid | Grid + Sidebar + Masonry |
+|---|---|
+| ![Minimal single-column grid screenshot](docs/screenshots/minimal-single-grid.png) | ![Grid sidebar masonry screenshot](docs/screenshots/grid-sidebar-masonry.png) |
+
+| Magazine + Hero + Featured-First | Terminal + Sidebar + List |
+|---|---|
+| ![Magazine hero featured-first screenshot](docs/screenshots/magazine-hero-featured.png) | ![Terminal sidebar list screenshot](docs/screenshots/terminal-sidebar-list.png) |
+
 ## Supported Platforms
 
 - **GitHub** — public and private repos (via `GITHUB_TOKEN`, auto-provided in Actions).

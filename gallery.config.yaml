@@ -26,14 +26,24 @@ resume:
   education: []
 
 import:
-  github: Weilong-Qin
+  github: https://github.com/Weilong-Qin
   min_stars: 0
 
 projects:
   - github: Weilong-Qin/vibe-gallery
     featured: true
     status: active
+  - github: Weilong-Qin/vibe-pomo
+    featured: true
+    status: active  
+  - github: Weilong-Qin/figure-painter
+    featured: true
+    status: active
+  - github: Weilong-Qin/data_compress
+    featured: true
+    status: active
 
 sync:
   on_push: true
   schedule: "0 6 * * 1"
+
