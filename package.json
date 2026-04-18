@@ -10,6 +10,7 @@
     "dev": "vite",
     "build": "npm run build:data && npm run build:app",
     "build:data": "tsx src/build/index.ts",
+    "build:assemble": "tsx src/build/assemble.ts",
     "build:app": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"

@@ -1,0 +1,85 @@
+name: Config Build (style/profile/layout changes only)
+
+# Fast deploy (~1 min) that skips all GitHub API calls and LLM analysis.
+# Restores project data from the cache written by build-full.yml,
+# then re-assembles gallery.json from cache + current gallery.config.yaml.
+#
+# Triggered when only config/theme/layout/profile changes:
+# - gallery.config.yaml edited
+# - Frontend source (components, themes, layouts) changed
+#
+# Does NOT re-fetch repos or re-run LLM — requires build-full to have
+# run at least once so .gallery-cache.json exists in Actions cache.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'gallery.config.yaml'
+      - 'src/app/**'
+      - 'src/types/**'
+      - '.github/workflows/build-config.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Restore project data cache
+        id: cache-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: .gallery-cache.json
+          # No exact key — always fall back to latest gallery-data- entry
+          key: gallery-data-${{ github.run_id }}
+          restore-keys: |
+            gallery-data-
+
+      - name: Warn if no cache available
+        if: steps.cache-restore.outputs.cache-hit != 'true' && steps.cache-restore.outputs.cache-matched-key == ''
+        run: |
+          echo "::warning::No project data cache found. Run the 'Full Build' workflow first."
+          echo "Continuing with empty project list..."
+
+      - name: Assemble gallery from cache
+        run: npm run build:assemble || (echo "Cache missing, creating empty gallery..." && npm run build:data)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build frontend
+        run: npm run build:app
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

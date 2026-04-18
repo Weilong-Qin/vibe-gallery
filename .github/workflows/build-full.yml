@@ -1,14 +1,22 @@
-name: Build and Deploy Gallery
+name: Full Build (fetch + analyze + deploy)
+
+# Triggered when project data needs refreshing:
+# - src/build/** code changes
+# - Weekly scheduled rebuild to pick up new repos/commits
+# - Manual trigger via GitHub UI
+#
+# After this workflow completes, the .gallery-cache.json is saved to
+# Actions cache so build-config.yml can assemble without re-fetching.
 
 on:
   push:
     branches: [main]
     paths:
-      - 'gallery.config.yaml'
-      - 'src/**'
-      - '.github/workflows/build.yml'
+      - 'src/build/**'
+      - 'src/types/**'
+      - '.github/workflows/build-full.yml'
   schedule:
-    - cron: '0 6 * * 1'
+    - cron: '0 6 * * 1'  # Weekly Monday 6am UTC
   workflow_dispatch:
 
 permissions:
@@ -34,15 +42,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Restore gallery cache
+      - name: Restore project data cache
         uses: actions/cache@v4
         with:
           path: .gallery-cache.json
-          key: gallery-cache-${{ hashFiles('gallery.config.yaml') }}
+          # Unique key per run so new data is always saved
+          key: gallery-data-${{ github.run_id }}
           restore-keys: |
-            gallery-cache-
+            gallery-data-
 
-      - name: Build data
+      - name: Fetch and analyze projects
         run: npm run build:data
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
