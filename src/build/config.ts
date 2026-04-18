@@ -124,6 +124,25 @@ export const GalleryConfigSchema = z.object({
   projects: z.array(ProjectConfigSchema).optional(),
 })
 
+function normalizeGitHubUser(input: string): string {
+  const trimmed = input.trim()
+  if (!trimmed) return trimmed
+
+  // Accept both plain username and full profile URL.
+  if (!/^https?:\/\//i.test(trimmed)) {
+    return trimmed.replace(/^@/, '')
+  }
+
+  try {
+    const url = new URL(trimmed)
+    if (url.hostname.toLowerCase() !== 'github.com') return trimmed
+    const firstPath = url.pathname.split('/').filter(Boolean)[0]
+    return firstPath ? firstPath.replace(/^@/, '') : trimmed
+  } catch {
+    return trimmed
+  }
+}
+
 // Type sanity check — schema-inferred shape should be assignable to GalleryConfig
 export type GalleryConfigInferred = z.infer<typeof GalleryConfigSchema>
 
@@ -154,6 +173,11 @@ export async function loadConfig(
 
   try {
     const validated = GalleryConfigSchema.parse(parsed)
+
+    if (validated.import?.github) {
+      validated.import.github = normalizeGitHubUser(validated.import.github)
+    }
+
     return validated as GalleryConfig
   } catch (err) {
     if (err instanceof z.ZodError) {
