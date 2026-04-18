@@ -147,7 +147,7 @@ async function fetchSingleProject(
       id: projectKey(id),
       platform: id.platform,
       repoUrl,
-      title: finalExtracted.title || id.repo,
+      title: projectConfig?.override?.title ?? id.repo,
       description: finalExtracted.description || '',
       techStack: finalExtracted.techStack ?? [],
       features: finalExtracted.features ?? [],
