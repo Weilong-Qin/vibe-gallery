@@ -122,6 +122,9 @@ profile:
     email: "you@example.com"
     website: "https://example.com"
 
+# ─── Language ────────────────────────────────────────────────────────
+language: en               # en | zh — controls UI labels and LLM extraction language
+
 # ─── Appearance ──────────────────────────────────────────────────────
 theme: terminal            # minimal | grid | magazine | terminal
 accent: "#00ff88"          # optional hex color override

@@ -1,12 +1,14 @@
 import React from 'react'
 import type { SkillCategory } from '../../../types/index.js'
+import { useLang } from '../../i18n.js'
 
 export function Skills({ skills }: { skills: SkillCategory[] }) {
+  const t = useLang()
   if (skills.length === 0) return null
   return (
     <section>
       <h2 style={{ fontSize: 'var(--font-size-xl)', marginBottom: 'var(--space-lg)', color: 'var(--color-text)' }}>
-        Skills
+        {t.skills}
       </h2>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
         {skills.map((cat) => (

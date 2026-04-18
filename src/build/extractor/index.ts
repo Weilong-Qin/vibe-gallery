@@ -3,7 +3,7 @@ import { HeuristicExtractor } from './heuristic.js'
 import { LLMExtractor } from './llm.js'
 
 export interface Extractor {
-  extract(readme: string, repoInfo: RawRepoInfo): Promise<ExtractedData>
+  extract(readme: string, repoInfo: RawRepoInfo, language?: 'en' | 'zh'): Promise<ExtractedData>
 }
 
 export { HeuristicExtractor, LLMExtractor }

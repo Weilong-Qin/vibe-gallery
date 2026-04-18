@@ -35,9 +35,12 @@ export class LLMExtractor implements Extractor {
     throw new Error('LLM API error: 429 after retries')
   }
 
-  async extract(readme: string, repoInfo: RawRepoInfo): Promise<ExtractedData> {
+  async extract(readme: string, repoInfo: RawRepoInfo, language: 'en' | 'zh' = 'en'): Promise<ExtractedData> {
     try {
       const truncated = readme.slice(0, 4000)
+      const langInstruction = language === 'zh'
+        ? '请用中文输出 description 和 features 字段的内容。techStack 保持英文原名不变。'
+        : 'Output description and features in English.'
       const body = JSON.stringify({
         model: this.config.model,
         messages: [
@@ -48,7 +51,9 @@ export class LLMExtractor implements Extractor {
           },
           {
             role: 'user',
-            content: `Extract project info from this README. Reply with ONLY a JSON object, no markdown, no explanation:
+            content: `Extract project info from this README. Reply with ONLY a JSON object, no markdown, no explanation.
+${langInstruction}
+
 {
   "title": "project name",
   "description": "one sentence (max 120 chars) describing what this does",

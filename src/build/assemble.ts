@@ -96,6 +96,7 @@ async function main() {
       education: config.resume?.education ?? [],
     },
     projects: merged,
+    language: config.language ?? 'en',
     theme: config.theme,
     accent: config.accent,
     layout: config.layout,

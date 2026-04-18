@@ -2,8 +2,10 @@ import React from 'react'
 import type { ProjectData } from '../../../types/index.js'
 import { StatusBadge } from './StatusBadge.js'
 import { StatsBar } from './StatsBar.js'
+import { useLang } from '../../i18n.js'
 
 export function ProjectCard({ project }: { project: ProjectData }) {
+  const t = useLang()
   return (
     <div
       className={`project-card${project.featured ? ' featured' : ''}`}
@@ -31,7 +33,7 @@ export function ProjectCard({ project }: { project: ProjectData }) {
           fontWeight: 600,
           zIndex: 1,
         }}>
-          Featured
+          {t.featured}
         </span>
       )}
       {project.heroImage && (
@@ -105,7 +107,7 @@ export function ProjectCard({ project }: { project: ProjectData }) {
                 textDecoration: 'none',
               }}
             >
-              Demo →
+              {t.demo}
             </a>
           )}
         </div>

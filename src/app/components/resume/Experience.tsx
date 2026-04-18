@@ -1,12 +1,14 @@
 import React from 'react'
 import type { ExperienceItem } from '../../../types/index.js'
+import { useLang } from '../../i18n.js'
 
 export function Experience({ experience }: { experience: ExperienceItem[] }) {
+  const t = useLang()
   if (experience.length === 0) return null
   return (
     <section>
       <h2 style={{ fontSize: 'var(--font-size-xl)', marginBottom: 'var(--space-lg)', color: 'var(--color-text)' }}>
-        Experience
+        {t.experience}
       </h2>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-lg)' }}>
         {experience.map((item, i) => (

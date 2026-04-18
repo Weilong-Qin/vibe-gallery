@@ -5,6 +5,8 @@ profile:
   links:
     github: "https://github.com/Weilong-Qin"
 
+language: zh
+
 theme: terminal
 accent: "#00ff88"
 

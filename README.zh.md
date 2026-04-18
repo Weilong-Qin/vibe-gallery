@@ -122,6 +122,9 @@ profile:
     email: "you@example.com"
     website: "https://example.com"
 
+# ─── 语言 ────────────────────────────────────────────────────────────
+language: zh               # en | zh —控制 UI 标签语言及 LLM 提取内容的输出语言
+
 # ─── 外观 ────────────────────────────────────────────────────────────
 theme: terminal            # minimal | grid | magazine | terminal
 accent: "#00ff88"          # 可选，自定义强调色（十六进制）

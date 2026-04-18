@@ -1,13 +1,16 @@
 import React from 'react'
+import { useLang } from '../../i18n.js'
 
-const STATUS_CONFIG = {
-  active: { label: 'Active', color: '#22c55e' },
-  wip: { label: 'WIP', color: '#f59e0b' },
-  archived: { label: 'Archived', color: '#6b7280' },
+const STATUS_COLORS = {
+  active: '#22c55e',
+  wip: '#f59e0b',
+  archived: '#6b7280',
 } as const
 
 export function StatusBadge({ status }: { status: 'active' | 'wip' | 'archived' }) {
-  const config = STATUS_CONFIG[status]
+  const t = useLang()
+  const color = STATUS_COLORS[status]
+  const config = { label: t.status[status], color }
   return (
     <span style={{
       display: 'inline-flex',

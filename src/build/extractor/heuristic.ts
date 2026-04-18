@@ -190,6 +190,7 @@ export class HeuristicExtractor implements Extractor {
   async extract(
     readme: string,
     repoInfo: RawRepoInfo,
+    _language: 'en' | 'zh' = 'en',
   ): Promise<ExtractedData> {
     const repoInfoAny = repoInfo as RawRepoInfo & {
       name?: string

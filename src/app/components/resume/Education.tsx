@@ -1,12 +1,14 @@
 import React from 'react'
 import type { EducationItem } from '../../../types/index.js'
+import { useLang } from '../../i18n.js'
 
 export function Education({ education }: { education: EducationItem[] }) {
+  const t = useLang()
   if (education.length === 0) return null
   return (
     <section>
       <h2 style={{ fontSize: 'var(--font-size-xl)', marginBottom: 'var(--space-lg)', color: 'var(--color-text)' }}>
-        Education
+        {t.education}
       </h2>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
         {education.map((item, i) => (

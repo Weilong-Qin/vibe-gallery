@@ -106,6 +106,7 @@ const ImportConfigSchema = z.object({
 
 export const GalleryConfigSchema = z.object({
   profile: ProfileConfigSchema,
+  language: z.enum(['en', 'zh']).default('en'),
   theme: z.enum(['minimal', 'grid', 'magazine', 'terminal']).default('minimal'),
   accent: z.string().optional(),
   layout: LayoutConfigSchema.default({

@@ -4,11 +4,12 @@ import type { GalleryData } from '../types/index.js'
 import { Layout } from './components/Layout.js'
 import { Profile, Skills, Experience, Education } from './components/resume/index.js'
 import { ProjectGrid } from './components/projects/index.js'
+import { LangContext } from './i18n.js'
 
 const data = galleryData as unknown as GalleryData
 
 export default function App() {
-  const { profile, resume, projects, theme, accent, layout } = data
+  const { profile, resume, projects, theme, accent, layout, language } = data
 
   const resumeSections =
     resume.sections && resume.sections.length > 0
@@ -25,6 +26,7 @@ export default function App() {
   const isSidebar = layout.page === 'sidebar'
 
   return (
+    <LangContext.Provider value={language ?? 'en'}>
     <Layout layout={layout} theme={theme} accent={accent}>
       {isSidebar ? (
         <div className="page-root">
@@ -59,5 +61,6 @@ export default function App() {
         </div>
       )}
     </Layout>
+    </LangContext.Provider>
   )
 }

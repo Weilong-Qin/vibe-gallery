@@ -2,6 +2,7 @@
 
 export interface GalleryConfig {
   profile: ProfileConfig
+  language?: 'en' | 'zh'
   theme: 'minimal' | 'grid' | 'magazine' | 'terminal'
   accent?: string
   layout: LayoutConfig
@@ -67,6 +68,7 @@ export interface GalleryData {
   profile: ProfileData
   resume: ResumeData
   projects: ProjectData[]
+  language: 'en' | 'zh'
   theme: GalleryConfig['theme']
   accent?: string
   layout: LayoutConfig

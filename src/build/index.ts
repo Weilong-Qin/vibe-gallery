@@ -104,6 +104,7 @@ async function fetchSingleProject(
   id: RepoIdentifier,
   projectConfig: ProjectConfig | undefined,
   extractor: Extractor,
+  language: 'en' | 'zh' = 'en',
 ): Promise<ProjectData | null> {
   try {
     const provider = createProvider(id)
@@ -123,7 +124,7 @@ async function fetchSingleProject(
     const releases =
       displayStats === 'milestones' ? await provider.fetchReleases(id) : []
 
-    const extracted = await extractor.extract(readme, repoInfo)
+    const extracted = await extractor.extract(readme, repoInfo, language)
     const fixed = fixImagePaths(extracted, id.owner, id.repo, repoInfo.defaultBranch)
 
     const override = projectConfig?.override ?? {}
@@ -233,12 +234,13 @@ async function main(): Promise<void> {
   console.log(`Found ${identifiers.length} repo(s) to process`)
 
   const extractor = createExtractor()
+  const language = config.language ?? 'en'
   const limit = pLimit(2)
 
   const results = await Promise.all(
     identifiers.map((id) =>
       limit(() =>
-        fetchSingleProject(id, projectConfigMap.get(projectKey(id)), extractor),
+        fetchSingleProject(id, projectConfigMap.get(projectKey(id)), extractor, language),
       ),
     ),
   )
@@ -261,6 +263,7 @@ async function main(): Promise<void> {
       education: config.resume?.education ?? [],
     },
     projects,
+    language,
     theme: config.theme,
     accent: config.accent,
     layout: config.layout,
