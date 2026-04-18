@@ -10,13 +10,97 @@ Zero database. Zero server. Zero runtime. You push a YAML file, you get a portfo
 
 ## Quick Start
 
-1. **Fork** this repository (or click "Use this template").
-2. **Configure** — run `npx vibe-gallery init` for an interactive wizard, or edit `gallery.config.yaml` directly.
-3. **Push** to your `main` branch.
-4. **Enable Pages** — in your fork, go to **Settings → Pages → Source: GitHub Actions**.
-5. **Done** — your portfolio is live at `https://<yourusername>.github.io/vibe-gallery`.
+### 1. Fork & enable Pages
 
-The included workflow rebuilds on every push to `gallery.config.yaml` and on a weekly schedule, so stars and release data stay fresh without any action from you.
+1. **Fork** this repository (or click "Use this template").
+2. In your fork, go to **Settings → Pages → Source: GitHub Actions**.
+
+### 2. Configure
+
+Run the interactive wizard locally, or edit `gallery.config.yaml` directly:
+
+```bash
+npm install
+npx vibe-gallery init     # interactive wizard
+```
+
+At minimum, set `profile.name` and `import.github` (your GitHub username).
+
+### 3. Set secrets (optional but recommended)
+
+Go to **Settings → Secrets and variables → Actions** on your fork:
+
+| Secret         | Required      | Purpose                             |
+|----------------|---------------|-------------------------------------|
+| `GITHUB_TOKEN` | Auto-provided | Fetch GitHub repo data              |
+| `LLM_API_KEY`  | Optional      | AI-powered README extraction        |
+| `LLM_BASE_URL` | Optional      | OpenAI-compatible endpoint URL      |
+| `LLM_MODEL`    | Optional      | Model name (default: `gpt-4o-mini`) |
+| `GITEE_TOKEN`  | Optional      | Gitee repos                         |
+| `CODEUP_TOKEN` | Optional      | Codeup / Aliyun DevOps repos        |
+| `GITEA_TOKEN`  | Optional      | Self-hosted Gitea repos             |
+
+### 4. Push & deploy
+
+Push to `main` — GitHub Actions will build and deploy automatically.
+
+Your portfolio will be live at `https://<yourusername>.github.io/vibe-gallery`.
+
+---
+
+## How Builds Work
+
+There are **two separate workflows**, each optimized for different types of changes:
+
+### `build-full` — Full rebuild (fetches data + deploys)
+
+Runs `npm run build:data`: calls GitHub API, fetches READMEs, runs LLM extraction, writes cache.
+
+**Triggers automatically when:**
+- Code in `src/build/**` or `src/types/**` changes
+- Weekly schedule (Monday 6am UTC) — refreshes stars, new repos, etc.
+- Manual trigger via **Actions → Full Build → Run workflow**
+
+**When to trigger manually:**
+- First-time setup
+- You added new repos and want them to appear immediately
+- You want fresh LLM-extracted descriptions
+
+### `build-config` — Fast rebuild (config/style changes only, ~1 min)
+
+Runs `npm run build:assemble`: reads project data from local cache, re-assembles `gallery.json` from the current config. No API calls, no LLM.
+
+**Triggers automatically when:**
+- `gallery.config.yaml` changes (theme, layout, profile, resume)
+- Frontend source changes (`src/app/**`)
+
+**Use this for:**
+- Changing theme or layout
+- Updating your bio, skills, experience, education
+- Tweaking colors, density, section order
+- Any visual/style iteration
+
+> **Note:** `build-config` requires `build-full` to have run at least once so the project data cache exists. On a brand-new fork, trigger `build-full` first.
+
+### Local development workflow
+
+```bash
+npm install
+cp .env.example .env           # add your tokens
+
+# First time (or when you want fresh project data):
+npm run build:data             # ~minutes, calls GitHub API + LLM
+
+# Iterating on style/layout/profile (fast):
+npm run build:assemble         # <1 second, reads from local cache
+
+# Start the dev server (Vite HMR — live reload on CSS/component changes):
+npm run dev
+```
+
+You only need to re-run `build:data` when your repos change. For everything else — theme, layout, profile, resume — use `build:assemble` or just let `build-config` handle it on push.
+
+---
 
 ## Configuration
 
@@ -27,8 +111,8 @@ Everything lives in `gallery.config.yaml`. Here is the full reference:
 profile:
   name: "Your Name"
   bio: "Full-stack developer building in the vibe coding era"
-  # bio_override: "Takes precedence over bio if set"
-  avatar: github           # 'github' or a direct URL
+  # bio_override: "Takes precedence over AI-generated bio if set"
+  avatar: github           # 'github' fetches your avatar, or use a direct URL
   links:
     github: "https://github.com/yourusername"
     x: "https://x.com/yourusername"
@@ -38,7 +122,7 @@ profile:
 
 # ─── Appearance ──────────────────────────────────────────────────────
 theme: terminal            # minimal | grid | magazine | terminal
-accent: "#00ff88"          # optional hex color
+accent: "#00ff88"          # optional hex color override
 
 layout:
   page: sidebar            # single-column | sidebar | hero
@@ -64,7 +148,6 @@ resume:
       location: "Remote"
       highlights:
         - "Built scalable microservices serving 10M+ daily users"
-        - "Led migration from monolith to event-driven architecture"
   education:
     - school: "University of Example"
       degree: "B.S. Computer Science"
@@ -75,6 +158,7 @@ import:
   github: yourusername
   exclude: [yourusername/dotfiles, yourusername/scratch]
   min_stars: 0
+  exclude_forks: true      # skip forked repos (default: true)
 
 # ─── Explicit projects (any platform) ────────────────────────────────
 projects:
@@ -83,12 +167,12 @@ projects:
     demo_url: "https://demo.example.com"
     screenshots:
       - "https://example.com/screenshot1.png"
-    status: active          # active | wip | archived
+    status: active          # active | wip | archived (auto-inferred if omitted)
     display:
       stats: milestones
     override:
-      title: "My Best Project"
-      description: "Custom description here"
+      title: "My Best Project"          # override auto-detected repo name
+      description: "Custom description" # override LLM-extracted description
       techStack: [TypeScript, React, PostgreSQL]
       features:
         - "Real-time collaboration"
@@ -97,36 +181,40 @@ projects:
 
   # Gitee
   - gitee: owner/chinese-project
-    featured: false
 
   # Aliyun Codeup
   - codeup:
       org: your-org
       repo: internal-tool
-    status: wip
 
   # Self-hosted Gitea
   - gitea:
       url: "https://git.example.com"
       repo: owner/private-tool
-    demo_url: "https://tool.example.com"
 
 # ─── Sync schedule ───────────────────────────────────────────────────
 sync:
-  schedule: "0 6 * * 1"     # cron: weekly on Mondays at 06:00 UTC
-  on_push: true             # also rebuild when gallery.config.yaml changes
+  schedule: "0 6 * * 1"   # cron — controls build-full weekly trigger
+  on_push: true
 ```
 
 Any field marked optional can be omitted. `import` and `projects` can coexist — explicit `projects` entries override auto-imported ones with the same repo.
 
+**Project status auto-inference** (when `status` is not set):
+- Updated within 3 months → `active`
+- Updated 3–12 months ago → `wip`
+- Not updated for over 12 months → `archived`
+
+---
+
 ## Themes
 
-| Theme      | Style                                      |
-| ---------- | ------------------------------------------ |
-| `minimal`  | Clean, whitespace-heavy, prose-like        |
-| `grid`     | Card-based, structured, GitHub-inspired    |
-| `magazine` | Editorial, bold typography, serif          |
-| `terminal` | Dark, monospace, hacker aesthetic          |
+| Theme      | Style                                   |
+|------------|-----------------------------------------|
+| `minimal`  | Clean, whitespace-heavy, prose-like     |
+| `grid`     | Card-based, structured, GitHub-inspired |
+| `magazine` | Editorial, bold typography, serif       |
+| `terminal` | Dark, monospace, hacker aesthetic       |
 
 Set `accent` to any hex color to tint links, highlights, and borders.
 
@@ -136,17 +224,17 @@ Layout is composed from four independent dimensions — pick one value from each
 
 - **`page`** — overall page shape.
   - `single-column` — everything stacked, classic long-form.
-  - `sidebar` — profile/resume on the side, projects in the main pane.
-  - `hero` — large intro block above a projects section.
-- **`projects`** — how project entries are arranged.
-  - `grid` — uniform cards.
+  - `sidebar` — profile/resume on the left, projects on the right.
+  - `hero` — large profile block above a projects section.
+- **`projects`** — how project cards are arranged.
+  - `grid` — uniform columns.
   - `masonry` — Pinterest-style variable heights.
-  - `list` — vertical rows with more detail per item.
-  - `featured-first` — a big hero card up top, smaller cards below.
+  - `list` — vertical rows.
+  - `featured-first` — one hero card spanning full width, smaller cards below.
 - **`columns`** — `1`, `2`, `3`, or `auto` (responsive).
 - **`density`** — `compact`, `comfortable`, or `spacious` — controls padding and gaps.
 
-Mix freely — `hero` + `featured-first` + `auto` + `spacious` reads very differently from `sidebar` + `list` + `1` + `compact`.
+Changing theme/layout only requires `build:assemble` (or pushing to trigger `build-config`).
 
 ## Supported Platforms
 
@@ -155,64 +243,22 @@ Mix freely — `hero` + `featured-first` + `auto` + `spacious` reads very differ
 - **Codeup / Aliyun DevOps** — via `CODEUP_TOKEN`.
 - **Gitea (self-hosted)** — via `GITEA_TOKEN`. Specify the instance URL per-project.
 
-Each platform has its own entry shape under `projects:` — see the config reference above.
-
 ## AI-Powered Extraction
 
-vibe-gallery uses a **BYOK** (bring your own key) model for LLM-assisted extraction of tech stack, features, and hero images from READMEs.
+vibe-gallery uses a **BYOK** (bring your own key) model for LLM-assisted extraction of tech stack, features, and descriptions from READMEs.
 
 - Set `LLM_API_KEY` and `LLM_BASE_URL` in your fork's GitHub Actions secrets.
 - Optionally set `LLM_MODEL` (defaults to `gpt-4o-mini`).
-- Works with any OpenAI-compatible endpoint (OpenAI, DeepSeek, Qwen, local Ollama, etc.).
+- Works with any OpenAI-compatible endpoint (OpenAI, DeepSeek, SiliconFlow, Moonshot, local Ollama, etc.).
 
-If no LLM is configured, the build falls back to heuristic parsing — you still get a usable portfolio, just less polish.
-
-All per-project data can be overridden manually via the `override:` block, which always wins.
-
-## Local Development
-
-```bash
-npm install
-cp .env.example .env      # add your tokens (optional — public repos need none)
-npm run build:data        # fetch repo data and extract project info
-npm run dev               # start Vite dev server
-```
-
-Other scripts:
-
-- `npm run build` — full build (`build:data` + `build:app`).
-- `npm run build:app` — Vite build only (reuses last `build:data` output).
-- `npm run preview` — preview the built site.
-- `npm run typecheck` — TypeScript check.
-
-Between runs, a `.gallery-cache.json` file avoids re-fetching unchanged repos; the CI workflow caches it automatically.
-
-## Secrets Reference
-
-Set these under **Settings → Secrets and variables → Actions** on your fork:
-
-| Secret          | Required          | Purpose                                  |
-| --------------- | ----------------- | ---------------------------------------- |
-| `GITHUB_TOKEN`  | Auto-provided     | Fetch GitHub repo data                   |
-| `GITEE_TOKEN`   | Optional          | Gitee repos                              |
-| `CODEUP_TOKEN`  | Optional          | Codeup / Aliyun DevOps repos             |
-| `GITEA_TOKEN`   | Optional          | Self-hosted Gitea repos                  |
-| `LLM_API_KEY`   | Optional          | Enables AI extraction                    |
-| `LLM_BASE_URL`  | Optional          | OpenAI-compatible endpoint               |
-| `LLM_MODEL`     | Optional          | Model name (default: `gpt-4o-mini`)      |
-
-For local development, put the same values in a `.env` file in the project root.
+If no LLM is configured, the build falls back to heuristic parsing — you still get a usable portfolio. All extracted data can be overridden manually via `override:`.
 
 ## CLI
 
-A small CLI ships in `packages/cli`:
-
 ```bash
 npx vibe-gallery init       # interactive wizard — scaffolds gallery.config.yaml
-npx vibe-gallery preview    # local build + dev server
+npx vibe-gallery preview    # local build + preview server
 ```
-
-`init` asks a few questions (name, GitHub username, theme, layout) and writes a starter config. `preview` is a shortcut for `npm run build:data && npm run dev`.
 
 ## License
 
