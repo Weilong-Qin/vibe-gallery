@@ -1,5 +1,7 @@
 # vibe-gallery
 
+[English](./README.md) · [中文](./README.zh.md)
+
 > A static portfolio + web resume for the vibe coding era. Fork, configure, deploy.
 
 ## What is this?
