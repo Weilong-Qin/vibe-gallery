@@ -172,7 +172,7 @@ projects:
     demo_url: "https://demo.example.com"
     screenshots:
       - "https://example.com/screenshot1.png"
-    status: active          # active | wip | archived（不填则自动推断）
+    status: active          # active | wip | archived（默认 active）
     display:
       stats: milestones
     override:
@@ -203,10 +203,7 @@ sync:
   on_push: true
 ```
 
-**项目状态自动推断**（未手动设置 `status` 时）：
-- 3 个月内有更新 → `active`（活跃）
-- 3～12 个月未更新 → `wip`（进行中）
-- 超过 12 个月未更新 → `archived`（已归档）
+`status` 省略时默认值为 `active`。如果你希望显式标注为 `wip` 或 `archived`，请直接写在每个项目上。
 
 ---
 

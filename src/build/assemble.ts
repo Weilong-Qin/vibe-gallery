@@ -1,7 +1,8 @@
 /**
  * Fast re-assembly: reads project data from local cache + current gallery.config.yaml,
- * skips all GitHub API calls and LLM analysis. Use this when changing theme, layout,
- * profile info, or resume sections without wanting to re-fetch project data.
+ * skips all GitHub API calls and LLM analysis. Use this when changing config-driven
+ * presentation details such as language, theme, layout, profile info, resume content,
+ * import settings, display options, or per-project overrides without re-fetching data.
  *
  * Usage: npm run build:assemble
  */

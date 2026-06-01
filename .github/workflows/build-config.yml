@@ -1,11 +1,12 @@
-name: Config Build (style/profile/layout changes only)
+name: Config Build (config/style changes only)
 
 # Fast deploy (~1 min) that skips all GitHub API calls and LLM analysis.
 # Restores project data from the cache written by build-full.yml,
 # then re-assembles gallery.json from cache + current gallery.config.yaml.
 #
-# Triggered when only config/theme/layout/profile changes:
-# - gallery.config.yaml edited
+# Triggered when config or frontend styling changes:
+# - gallery.config.yaml edited (profile, language, theme, layout, resume,
+#   import, display, projects, and overrides)
 # - Frontend source (components, themes, layouts) changed
 #
 # Does NOT re-fetch repos or re-run LLM — requires build-full to have

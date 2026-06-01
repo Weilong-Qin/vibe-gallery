@@ -172,7 +172,7 @@ projects:
     demo_url: "https://demo.example.com"
     screenshots:
       - "https://example.com/screenshot1.png"
-    status: active          # active | wip | archived (auto-inferred if omitted)
+    status: active          # active | wip | archived (defaults to active)
     display:
       stats: milestones
     override:
@@ -205,10 +205,7 @@ sync:
 
 Any field marked optional can be omitted. `import` and `projects` can coexist — explicit `projects` entries override auto-imported ones with the same repo.
 
-**Project status auto-inference** (when `status` is not set):
-- Updated within 3 months → `active`
-- Updated 3–12 months ago → `wip`
-- Not updated for over 12 months → `archived`
+`status` defaults to `active` when omitted. Set it explicitly to `wip` or `archived` if you want to override the default lifecycle state.
 
 ---
 

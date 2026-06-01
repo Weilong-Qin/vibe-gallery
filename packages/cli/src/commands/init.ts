@@ -37,11 +37,14 @@ export async function init() {
 
     const configYaml = `profile:
   name: "${name}"${bio ? `\n  bio: "${bio}"` : ''}
+  # bio_override: "Takes precedence over bio if set"
   avatar: github
   links:
     ${github ? `github: "https://github.com/${github}"` : '# github: "https://github.com/yourusername"'}
     # x: "https://x.com/yourusername"
     # email: "you@example.com"
+
+language: en
 
 theme: ${theme}
 # accent: "#00ff88"  # optional accent color override
@@ -65,13 +68,14 @@ ${github ? `import:
   github: ${github}
   exclude: []
   min_stars: 0
+  exclude_forks: true  # skip forked repos (default: true)
 
 ` : ''}projects: []
   # Example:
   # - github: owner/repo
   #   featured: true
   #   demo_url: "https://demo.example.com"
-  #   status: active  # active | wip | archived
+  #   status: active  # active | wip | archived (default: active)
 
 sync:
   on_push: true

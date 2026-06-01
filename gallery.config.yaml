@@ -106,7 +106,7 @@ projects:
     # 是否置顶为精选项目（在 featured-first 布局中占满首行）
     featured: true
     # 手动指定项目状态：active（活跃）| wip（进行中）| archived（已归档）
-    # 不填则根据最近推送时间自动推断：3 个月内→active，3-12 个月→wip，超过 12 个月→archived
+    # 不填时默认 active；如需其他生命周期可手动改为 wip 或 archived
     status: active
     # demo_url: "https://demo.example.com"   # 演示地址，显示为卡片按钮
     # screenshots:                           # 截图列表，显示在卡片内
