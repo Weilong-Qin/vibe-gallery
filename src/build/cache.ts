@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import type { ProjectData } from '../types/index.js'
 
 const CACHE_FILE = join(process.cwd(), '.gallery-cache.json')
+
 let cache: Record<string, ProjectData> | null = null
 
 async function loadCache(): Promise<Record<string, ProjectData>> {
@@ -21,11 +22,12 @@ export async function getCached(key: string): Promise<ProjectData | null> {
   return c[key] ?? null
 }
 
-export async function setCached(
-  key: string,
-  data: ProjectData,
+export async function setCachedBatch(
+  entries: [string, ProjectData][],
 ): Promise<void> {
   const c = await loadCache()
-  c[key] = data
-  await writeFile(CACHE_FILE, JSON.stringify(c, null, 2))
+  for (const [key, data] of entries) {
+    c[key] = data
+  }
+  await writeFile(CACHE_FILE, JSON.stringify(c))
 }

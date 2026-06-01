@@ -7,8 +7,8 @@ export interface GalleryConfig {
   accent?: string
   layout: LayoutConfig
   display?: { stats: 'stars' | 'milestones' | 'none' }
-  resume?: ResumeConfig
-  sync?: SyncConfig
+  resume: ResumeConfig
+  sync: SyncConfig
   import?: ImportConfig
   projects?: ProjectConfig[]
 }

@@ -5,72 +5,47 @@
  *
  * Usage: npm run build:assemble
  */
+
 import { promises as fs } from 'node:fs'
 import { resolve } from 'node:path'
 import { loadConfig } from './config.js'
-import type { GalleryData, ProjectData, ProfileData, SocialLink } from '../types/index.js'
+import {
+  assembleProfile,
+  buildResumeData,
+  buildProjectConfigMap,
+  writeThemeEntry,
+  writeHtmlMeta,
+} from './shared.js'
+import type { GalleryData, ProjectData } from '../types/index.js'
 
 const CACHE_FILE = resolve(process.cwd(), '.gallery-cache.json')
 
-const ICON_MAP: Record<string, SocialLink['icon']> = {
-  github: 'github', x: 'x', twitter: 'x', email: 'email',
-  linkedin: 'linkedin', weibo: 'weibo',
-}
-
-function inferIcon(key: string): SocialLink['icon'] {
-  return ICON_MAP[key.toLowerCase()] ?? 'website'
-}
-
-function assembleProfile(
-  config: Awaited<ReturnType<typeof loadConfig>>['profile'],
-  githubUsername?: string,
-): ProfileData {
-  const avatarUrl = config.avatar === 'github'
-    ? `https://github.com/${githubUsername ?? config.name}.png`
-    : config.avatar
-
-  const links: SocialLink[] = Object.entries(config.links ?? {}).map(([key, url]) => ({
-    key,
-    url: key.toLowerCase() === 'email' && !url.startsWith('mailto:') ? `mailto:${url}` : url,
-    icon: inferIcon(key),
-  }))
-
-  return { name: config.name, bio: config.bio_override ?? config.bio ?? '', avatarUrl, links }
-}
-
 async function main() {
   console.log('⚡ Assembling gallery from cache...')
+
   const config = await loadConfig()
 
-  // Read all cached projects
   let cache: Record<string, ProjectData> = {}
   try {
     const raw = await fs.readFile(CACHE_FILE, 'utf-8')
     cache = JSON.parse(raw) as Record<string, ProjectData>
   } catch {
-    console.warn('⚠ No cache found (.gallery-cache.json). Run npm run build:data first.')
+    console.warn(
+      '⚠ No cache found (.gallery-cache.json). Run npm run build:data first.',
+    )
     process.exit(1)
   }
 
-  // Collect unique projects from cache (latest entry per repo key)
   const seen = new Map<string, ProjectData>()
   for (const project of Object.values(cache)) {
-    const existing = seen.get(project.id)
-    if (!existing) seen.set(project.id, project)
+    if (!seen.has(project.id)) seen.set(project.id, project)
   }
 
   const projects = [...seen.values()]
 
-  // Apply any config-level overrides (featured, status, demo_url, etc.)
-  const projectConfigMap = new Map<string, NonNullable<typeof config.projects>[number]>()
-  for (const p of config.projects ?? []) {
-    if (p.github) {
-      const [owner, repo] = p.github.split('/')
-      if (owner && repo) projectConfigMap.set(`github:${owner}/${repo}`, p)
-    }
-  }
+  const projectConfigMap = buildProjectConfigMap(config)
 
-  const merged = projects.map(p => {
+  const merged = projects.map((p) => {
     const cfg = projectConfigMap.get(p.id)
     if (!cfg) return p
     return {
@@ -85,16 +60,15 @@ async function main() {
     }
   })
 
-  const profile = assembleProfile(config.profile, config.import?.github)
+  const profile = assembleProfile(
+    config.profile,
+    config.profile.bio_override ?? config.profile.bio ?? '',
+    config.import?.github,
+  )
 
   const galleryData: GalleryData = {
     profile,
-    resume: {
-      sections: config.resume?.sections ?? [],
-      skills: config.resume?.skills ?? [],
-      experience: config.resume?.experience ?? [],
-      education: config.resume?.education ?? [],
-    },
+    resume: buildResumeData(config),
     projects: merged,
     language: config.language ?? 'en',
     theme: config.theme,
@@ -104,11 +78,18 @@ async function main() {
   }
 
   const outPath = resolve('src/app/data/gallery.json')
+  await fs.mkdir('src/app/data', { recursive: true })
   await fs.writeFile(outPath, JSON.stringify(galleryData, null, 2))
-  console.log(`✓ gallery.json assembled (${merged.length} projects from cache)`)
+
+  await writeThemeEntry(config.theme)
+  await writeHtmlMeta(galleryData)
+
+  console.log(
+    `✓ gallery.json assembled (${merged.length} projects from cache)`,
+  )
 }
 
-main().catch(err => {
+main().catch((err) => {
   console.error('Assemble failed:', err)
   process.exit(1)
 })

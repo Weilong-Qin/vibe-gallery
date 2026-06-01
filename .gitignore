@@ -29,3 +29,5 @@ skills-lock.json
 
 # Gallery build cache
 .gallery-cache.json
+# Auto-generated theme entry (build output)
+src/app/themes/theme-entry.css

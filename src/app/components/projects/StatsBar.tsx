@@ -11,7 +11,7 @@ export function StatsBar({ stats, display }: StatsBarProps) {
 
   if (stats.type === 'stars') {
     return (
-      <div style={{ display: 'flex', gap: 'var(--space-md)', color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)' }}>
+      <div className="stats-bar--stars">
         <span>⭐ {stats.stars.toLocaleString()}</span>
         <span title="Forks">⑂ {stats.forks.toLocaleString()}</span>
         <span>👁 {stats.watchers.toLocaleString()}</span>
@@ -20,12 +20,12 @@ export function StatsBar({ stats, display }: StatsBarProps) {
   }
 
   return (
-    <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>
+    <div className="stats-bar--milestones">
       {stats.releases.slice(0, 3).map((r) => (
-        <div key={r.version} style={{ display: 'flex', gap: 'var(--space-sm)', marginBottom: 2 }}>
-          <span style={{ color: 'var(--color-accent)', fontFamily: 'var(--font-mono)' }}>{r.version}</span>
+        <div key={r.version} className="stats-bar__release">
+          <span className="stats-bar__version">{r.version}</span>
           <span>{r.date}</span>
-          {r.summary && <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 200 }}>{r.summary}</span>}
+          {r.summary && <span className="stats-bar__summary">{r.summary}</span>}
         </div>
       ))}
     </div>

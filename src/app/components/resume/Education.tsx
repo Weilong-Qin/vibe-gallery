@@ -5,19 +5,18 @@ import { useLang } from '../../i18n.js'
 export function Education({ education }: { education: EducationItem[] }) {
   const t = useLang()
   if (education.length === 0) return null
+
   return (
     <section>
-      <h2 style={{ fontSize: 'var(--font-size-xl)', marginBottom: 'var(--space-lg)', color: 'var(--color-text)' }}>
-        {t.education}
-      </h2>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
+      <h2 className="education-section__heading">{t.education}</h2>
+      <div className="education-section__list">
         {education.map((item, i) => (
           <div key={i}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap' }}>
-              <strong style={{ color: 'var(--color-text)' }}>{item.school}</strong>
-              <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>{item.period}</span>
+            <div className="education-item__header">
+              <strong className="education-item__school">{item.school}</strong>
+              <span className="education-item__period">{item.period}</span>
             </div>
-            <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)' }}>{item.degree}</p>
+            <p className="education-item__degree">{item.degree}</p>
           </div>
         ))}
       </div>

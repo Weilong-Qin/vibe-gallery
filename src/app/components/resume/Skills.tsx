@@ -5,27 +5,17 @@ import { useLang } from '../../i18n.js'
 export function Skills({ skills }: { skills: SkillCategory[] }) {
   const t = useLang()
   if (skills.length === 0) return null
+
   return (
-    <section>
-      <h2 style={{ fontSize: 'var(--font-size-xl)', marginBottom: 'var(--space-lg)', color: 'var(--color-text)' }}>
-        {t.skills}
-      </h2>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
+    <section className="skills-section">
+      <h2 className="skills-section__heading">{t.skills}</h2>
+      <div className="skills-section__list">
         {skills.map((cat) => (
           <div key={cat.category}>
-            <h3 style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)', marginBottom: 'var(--space-sm)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              {cat.category}
-            </h3>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-xs)' }}>
+            <h3 className="skills-category__name">{cat.category}</h3>
+            <div className="skills-category__items">
               {cat.items.map((item) => (
-                <span key={item} style={{
-                  padding: '2px 10px',
-                  background: 'var(--color-surface)',
-                  border: 'var(--card-border)',
-                  borderRadius: 'var(--card-radius)',
-                  fontSize: 'var(--font-size-sm)',
-                  color: 'var(--color-text)',
-                }}>
+                <span key={item} className="skills-category__item">
                   {item}
                 </span>
               ))}

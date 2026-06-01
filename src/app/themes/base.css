@@ -16,6 +16,7 @@ body {
 a {
   color: var(--color-accent);
   text-decoration: none;
+  transition: color var(--transition-fast);
 }
 
 a:hover {
@@ -25,6 +26,12 @@ a:hover {
 code, pre {
   font-family: var(--font-mono);
   font-size: 0.9em;
+}
+
+/* Transition variables */
+:root {
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
 }
 
 /* Density modifiers */
@@ -51,4 +58,18 @@ section + section {
 aside > section + section,
 .page-root > section + section {
   margin-top: var(--space-xl);
+}
+
+/* Micro-interactions */
+.project-card {
+  transition: box-shadow var(--transition-normal), transform var(--transition-normal);
+}
+
+.project-card:hover {
+  box-shadow: var(--card-shadow), 0 4px 16px rgba(0,0,0,0.08);
+  transform: translateY(-2px);
+}
+
+.project-card__title a {
+  transition: color var(--transition-fast);
 }

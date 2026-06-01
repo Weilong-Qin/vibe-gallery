@@ -10,21 +10,21 @@ const STATUS_COLORS = {
 export function StatusBadge({ status }: { status: 'active' | 'wip' | 'archived' }) {
   const t = useLang()
   const color = STATUS_COLORS[status]
-  const config = { label: t.status[status], color }
+
   return (
-    <span style={{
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: 4,
-      padding: '2px 8px',
-      borderRadius: 999,
-      border: `1px solid ${config.color}33`,
-      background: `${config.color}11`,
-      fontSize: 'var(--font-size-sm)',
-      color: config.color,
-    }}>
-      <span style={{ width: 6, height: 6, borderRadius: '50%', background: config.color, display: 'inline-block' }} />
-      {config.label}
+    <span
+      className="status-badge"
+      style={{
+        border: `1px solid ${color}33`,
+        background: `${color}11`,
+        color,
+      }}
+    >
+      <span
+        className="status-badge__dot"
+        style={{ background: color }}
+      />
+      {t.status[status]}
     </span>
   )
 }

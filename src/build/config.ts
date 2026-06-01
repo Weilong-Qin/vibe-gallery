@@ -3,20 +3,24 @@ import { resolve as resolvePath } from 'node:path'
 import yaml from 'js-yaml'
 import { z } from 'zod'
 import type { GalleryConfig, RepoIdentifier } from '../types/index.js'
+import { identifierFromProjectConfig, projectKey } from './shared.js'
+import { createProvider } from './providers/index.js'
 
 // ── Layout ───────────────────────────────────────────────────────────
-
 const LayoutConfigSchema = z.object({
-  page: z.enum(['single-column', 'sidebar', 'hero']).default('single-column'),
-  projects: z.enum(['grid', 'masonry', 'list', 'featured-first']).default('grid'),
+  page: z.enum(['single-column', 'sidebar', 'hero']).default('sidebar'),
+  projects: z
+    .enum(['grid', 'masonry', 'list', 'featured-first'])
+    .default('featured-first'),
   columns: z
     .union([z.literal(1), z.literal(2), z.literal(3), z.literal('auto')])
-    .default(2),
-  density: z.enum(['compact', 'comfortable', 'spacious']).default('comfortable'),
+    .default('auto'),
+  density: z
+    .enum(['compact', 'comfortable', 'spacious'])
+    .default('comfortable'),
 })
 
 // ── Profile ──────────────────────────────────────────────────────────
-
 const ProfileConfigSchema = z.object({
   name: z.string().min(1, 'profile.name is required'),
   bio: z.string().optional(),
@@ -26,7 +30,6 @@ const ProfileConfigSchema = z.object({
 })
 
 // ── Project ──────────────────────────────────────────────────────────
-
 const OverrideSchema = z.object({
   title: z.string().optional(),
   description: z.string().optional(),
@@ -59,7 +62,6 @@ const ProjectConfigSchema = z
   )
 
 // ── Resume ───────────────────────────────────────────────────────────
-
 const SkillCategorySchema = z.object({
   category: z.string().min(1),
   items: z.array(z.string()),
@@ -80,21 +82,21 @@ const EducationItemSchema = z.object({
 })
 
 const ResumeConfigSchema = z.object({
-  sections: z.array(z.enum(['skills', 'experience', 'education', 'projects'])),
+  sections: z
+    .array(z.enum(['skills', 'experience', 'education', 'projects']))
+    .default(['skills', 'experience', 'education', 'projects']),
   skills: z.array(SkillCategorySchema).optional(),
   experience: z.array(ExperienceItemSchema).optional(),
   education: z.array(EducationItemSchema).optional(),
 })
 
 // ── Sync ─────────────────────────────────────────────────────────────
-
 const SyncConfigSchema = z.object({
   schedule: z.string().optional(),
   on_push: z.boolean().optional(),
 })
 
 // ── Import ───────────────────────────────────────────────────────────
-
 const ImportConfigSchema = z.object({
   github: z.string().optional(),
   exclude: z.array(z.string()).optional(),
@@ -103,23 +105,24 @@ const ImportConfigSchema = z.object({
 })
 
 // ── Root ─────────────────────────────────────────────────────────────
-
 export const GalleryConfigSchema = z.object({
   profile: ProfileConfigSchema,
   language: z.enum(['en', 'zh']).default('en'),
   theme: z.enum(['minimal', 'grid', 'magazine', 'terminal']).default('minimal'),
   accent: z.string().optional(),
   layout: LayoutConfigSchema.default({
-    page: 'single-column',
-    projects: 'grid',
-    columns: 2,
+    page: 'sidebar',
+    projects: 'featured-first',
+    columns: 'auto',
     density: 'comfortable',
   }),
   display: z
     .object({ stats: z.enum(['stars', 'milestones', 'none']) })
     .optional(),
-  resume: ResumeConfigSchema.optional(),
-  sync: SyncConfigSchema.optional(),
+  resume: ResumeConfigSchema.default({
+    sections: ['skills', 'experience', 'education', 'projects'],
+  }),
+  sync: SyncConfigSchema.default({ on_push: true, schedule: '0 6 * * 1' }),
   import: ImportConfigSchema.optional(),
   projects: z.array(ProjectConfigSchema).optional(),
 })
@@ -127,12 +130,9 @@ export const GalleryConfigSchema = z.object({
 function normalizeGitHubUser(input: string): string {
   const trimmed = input.trim()
   if (!trimmed) return trimmed
-
-  // Accept both plain username and full profile URL.
   if (!/^https?:\/\//i.test(trimmed)) {
     return trimmed.replace(/^@/, '')
   }
-
   try {
     const url = new URL(trimmed)
     if (url.hostname.toLowerCase() !== 'github.com') return trimmed
@@ -143,22 +143,19 @@ function normalizeGitHubUser(input: string): string {
   }
 }
 
-// Type sanity check — schema-inferred shape should be assignable to GalleryConfig
 export type GalleryConfigInferred = z.infer<typeof GalleryConfigSchema>
 
 // ── loadConfig ───────────────────────────────────────────────────────
-
 function formatZodError(err: z.ZodError): string {
   const lines: string[] = ['Invalid gallery config:']
   for (const issue of err.issues) {
     const path = issue.path.length > 0 ? issue.path.join('.') : '(root)'
-    lines.push(`  - ${path}: ${issue.message}`)
+    lines.push(` - ${path}: ${issue.message}`)
   }
-  // Also include flattened summary for tooling that wants it
   const flat = err.flatten()
   if (flat.formErrors.length > 0) {
     for (const msg of flat.formErrors) {
-      lines.push(`  - (root): ${msg}`)
+      lines.push(` - (root): ${msg}`)
     }
   }
   return lines.join('\n')
@@ -170,14 +167,11 @@ export async function loadConfig(
   const absPath = resolvePath(process.cwd(), configPath)
   const raw = await readFile(absPath, 'utf8')
   const parsed = yaml.load(raw)
-
   try {
     const validated = GalleryConfigSchema.parse(parsed)
-
     if (validated.import?.github) {
       validated.import.github = normalizeGitHubUser(validated.import.github)
     }
-
     return validated as GalleryConfig
   } catch (err) {
     if (err instanceof z.ZodError) {
@@ -188,64 +182,45 @@ export async function loadConfig(
 }
 
 // ── resolveProjects ──────────────────────────────────────────────────
-
-function projectToRepoIdentifier(
-  project: z.infer<typeof ProjectConfigSchema>,
-): RepoIdentifier | null {
-  if (project.github) {
-    const [owner, repo] = project.github.split('/')
-    if (!owner || !repo) return null
-    return { platform: 'github', owner, repo }
-  }
-  if (project.gitee) {
-    const [owner, repo] = project.gitee.split('/')
-    if (!owner || !repo) return null
-    return { platform: 'gitee', owner, repo }
-  }
-  if (project.codeup) {
-    return {
-      platform: 'codeup',
-      owner: project.codeup.org,
-      repo: project.codeup.repo,
-      org: project.codeup.org,
-    }
-  }
-  if (project.gitea) {
-    const [owner, repo] = project.gitea.repo.split('/')
-    if (!owner || !repo) return null
-    return {
-      platform: 'gitea',
-      owner,
-      repo,
-      baseUrl: project.gitea.url,
-    }
-  }
-  return null
-}
-
-export function resolveProjects(config: GalleryConfig): RepoIdentifier[] {
+export async function resolveProjects(config: GalleryConfig): Promise<RepoIdentifier[]> {
+  const seen = new Set<string>()
   const identifiers: RepoIdentifier[] = []
 
-  // import.github → placeholder; actual listing happens at runtime in the build pipeline
-  if (config.import?.github) {
-    // intentional no-op placeholder
+  function addUnique(id: RepoIdentifier) {
+    const key = projectKey(id)
+    if (!seen.has(key)) {
+      seen.add(key)
+      identifiers.push(id)
+    }
   }
 
   for (const project of config.projects ?? []) {
-    const id = projectToRepoIdentifier(
+    const id = identifierFromProjectConfig(
       project as z.infer<typeof ProjectConfigSchema>,
     )
-    if (id) identifiers.push(id)
+    if (id) addUnique(id)
   }
 
-  // Deduplicate by `${platform}:${owner}/${repo}`
-  const seen = new Set<string>()
-  const unique: RepoIdentifier[] = []
-  for (const id of identifiers) {
-    const key = `${id.platform}:${id.owner}/${id.repo}`
-    if (seen.has(key)) continue
-    seen.add(key)
-    unique.push(id)
+  if (config.import?.github) {
+    try {
+      const provider = createProvider({
+        platform: 'github',
+        owner: config.import.github,
+        repo: '',
+      })
+      const imported = await provider.listUserRepos(config.import.github, {
+        exclude: config.import.exclude ?? [],
+        minStars: config.import.min_stars ?? 0,
+        excludeForks: config.import.exclude_forks ?? true,
+      })
+      for (const id of imported) addUnique(id)
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err)
+      console.warn(
+        `⚠ Failed to import repos for ${config.import.github}: ${msg}`,
+      )
+    }
   }
-  return unique
+
+  return identifiers
 }

@@ -1,56 +1,28 @@
-import type {
-  RepoIdentifier,
-  RawRepoInfo,
-  RawRelease,
-  ListReposOptions,
-} from '../../types/index.js'
+import type { RepoIdentifier, RawRepoInfo, RawRelease, ListReposOptions, } from '../../types/index.js'
 import type { RepoProvider } from './base.js'
 import { GitHubProvider } from './github.js'
 
-class NotImplementedProvider implements RepoProvider {
-  constructor(private platform: string) {}
+const providerRegistry = new Map<string, (id: RepoIdentifier) => RepoProvider>()
 
-  fetchReadme(_id: RepoIdentifier): Promise<string> {
-    return Promise.reject(
-      new Error(`${this.platform} provider not implemented yet`)
-    )
-  }
+// Register built-in GitHub provider
+providerRegistry.set('github', () => new GitHubProvider(process.env.GITHUB_TOKEN))
 
-  fetchRepoInfo(_id: RepoIdentifier): Promise<RawRepoInfo> {
-    return Promise.reject(
-      new Error(`${this.platform} provider not implemented yet`)
-    )
-  }
-
-  fetchReleases(_id: RepoIdentifier): Promise<RawRelease[]> {
-    return Promise.reject(
-      new Error(`${this.platform} provider not implemented yet`)
-    )
-  }
-
-  listUserRepos(
-    _username: string,
-    _opts: ListReposOptions
-  ): Promise<RepoIdentifier[]> {
-    return Promise.reject(
-      new Error(`${this.platform} provider not implemented yet`)
-    )
-  }
+export function registerProvider(
+  platform: string,
+  factory: (id: RepoIdentifier) => RepoProvider,
+): void {
+  providerRegistry.set(platform, factory)
 }
 
 export function createProvider(id: RepoIdentifier): RepoProvider {
-  switch (id.platform) {
-    case 'github':
-      return new GitHubProvider(process.env.GITHUB_TOKEN)
-    case 'gitee':
-      return new NotImplementedProvider('Gitee')
-    case 'codeup':
-      return new NotImplementedProvider('Codeup')
-    case 'gitea':
-      return new NotImplementedProvider('Gitea')
-    default:
-      throw new Error(`Unknown platform: ${(id as RepoIdentifier).platform}`)
+  const factory = providerRegistry.get(id.platform)
+  if (!factory) {
+    throw new Error(
+      `Unknown platform: "${id.platform}". Available: ${[...providerRegistry.keys()].join(', ')}. ` +
+      `Use registerProvider() to add custom platform support.`,
+    )
   }
+  return factory(id)
 }
 
 export type { RepoProvider } from './base.js'
