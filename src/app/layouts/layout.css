@@ -68,6 +68,19 @@
 
 [data-projects-layout="featured-first"] .project-card.featured {
   grid-column: 1 / -1;
+  display: flex;
+  flex-direction: row;
+}
+
+[data-projects-layout="featured-first"] .project-card.featured .project-card__hero-container {
+  width: 60%;
+  aspect-ratio: auto;
+  border-bottom: none;
+  border-right: var(--card-border);
+}
+
+[data-projects-layout="featured-first"] .project-card.featured .project-card__body {
+  width: 40%;
 }
 
 /* ── Responsive ───────────────────────────────────────── */
@@ -86,6 +99,21 @@
   [data-projects-layout="masonry"] .projects-grid {
     columns: 2;
   }
+
+  [data-projects-layout="featured-first"] .project-card.featured {
+    flex-direction: column;
+  }
+
+  [data-projects-layout="featured-first"] .project-card.featured .project-card__hero-container {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-right: none;
+    border-bottom: var(--card-border);
+  }
+
+  [data-projects-layout="featured-first"] .project-card.featured .project-card__body {
+    width: 100%;
+  }
 }
 
 /* Mobile: < 640px */
@@ -97,6 +125,21 @@
   .projects-grid {
     grid-template-columns: 1fr !important;
     columns: 1 !important;
+  }
+
+  [data-projects-layout="featured-first"] .project-card.featured {
+    flex-direction: column;
+  }
+
+  [data-projects-layout="featured-first"] .project-card.featured .project-card__hero-container {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-right: none;
+    border-bottom: var(--card-border);
+  }
+
+  [data-projects-layout="featured-first"] .project-card.featured .project-card__body {
+    width: 100%;
   }
 
   [data-page-layout="hero"] .hero-section {
