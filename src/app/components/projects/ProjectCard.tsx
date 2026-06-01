@@ -3,6 +3,7 @@ import type { ProjectData } from '../../../types/index.js'
 import { StatusBadge } from './StatusBadge.js'
 import { StatsBar } from './StatsBar.js'
 import { useLang } from '../../i18n.js'
+import { MarkdownText } from '../MarkdownText.js'
 
 export function ProjectCard({ project }: { project: ProjectData }) {
   const t = useLang()
@@ -49,7 +50,7 @@ export function ProjectCard({ project }: { project: ProjectData }) {
             {project.title}
           </a>
         </h3>
-        <p className="project-card__desc">{project.description}</p>
+        <MarkdownText content={project.description} className="project-card__desc" />
         {project.techStack.length > 0 && (
           <div className="project-card__tech">
             {project.techStack.map((tech) => (
@@ -59,7 +60,7 @@ export function ProjectCard({ project }: { project: ProjectData }) {
         )}
         {project.features.length > 0 && (
           <ul className="project-card__features">
-            {project.features.slice(0, 3).map((f, i) => <li key={i}>{f}</li>)}
+            {project.features.slice(0, 3).map((f, i) => <li key={i}><MarkdownText content={f} inline /></li>)}
           </ul>
         )}
         {project.screenshots.length > 0 && (

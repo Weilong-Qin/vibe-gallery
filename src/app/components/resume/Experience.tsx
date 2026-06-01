@@ -1,6 +1,7 @@
 import React from 'react'
 import type { ExperienceItem } from '../../../types/index.js'
 import { useLang } from '../../i18n.js'
+import { MarkdownText } from '../MarkdownText.js'
 
 export function Experience({ experience }: { experience: ExperienceItem[] }) {
   const t = useLang()
@@ -20,7 +21,7 @@ export function Experience({ experience }: { experience: ExperienceItem[] }) {
             {item.location && <p className="experience-item__location">{item.location}</p>}
             {item.highlights && item.highlights.length > 0 && (
               <ul className="experience-item__highlights">
-                {item.highlights.map((h, j) => <li key={j}>{h}</li>)}
+                {item.highlights.map((h, j) => <li key={j}><MarkdownText content={h} inline /></li>)}
               </ul>
             )}
           </div>

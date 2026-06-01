@@ -1,6 +1,7 @@
 import React from 'react'
 import type { ProfileData } from '../../../types/index.js'
 import { SocialIcon } from '../SocialIcons.js'
+import { MarkdownText } from '../MarkdownText.js'
 
 function formatUrl(key: string, url: string): string {
   if (key === 'email' && !url.startsWith('mailto:')) return `mailto:${url}`
@@ -22,7 +23,7 @@ export function Profile({ profile }: { profile: ProfileData }) {
         />
       )}
       <h1 className="profile__name">{profile.name}</h1>
-      {profile.bio && <p className="profile__bio">{profile.bio}</p>}
+      {profile.bio && <MarkdownText content={profile.bio} className="profile__bio" />}
       {profile.links.length > 0 && (
         <div className="profile__links">
           {profile.links.map((link) => (
