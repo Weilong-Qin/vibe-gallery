@@ -1,5 +1,4 @@
 name: Full Build (fetch + analyze + deploy)
-
 # Triggered when project data needs refreshing:
 # - src/build/** code changes
 # - Weekly scheduled rebuild to pick up new repos/commits
@@ -39,6 +38,8 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm ci
+      - name: Run tests
+        run: npm test
       - name: Restore project data cache
         uses: actions/cache@v4
         with:

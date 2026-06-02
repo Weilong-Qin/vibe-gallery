@@ -1,5 +1,4 @@
 name: Config Build (config/style changes only)
-
 # Fast deploy (~1 min) that skips all GitHub API calls and LLM analysis.
 # Restores project data from the cache written by build-full.yml,
 # then re-assembles gallery.json from cache + current gallery.config.yaml.
@@ -42,6 +41,8 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm ci
+      - name: Run tests
+        run: npm test
       - name: Restore project data cache
         id: cache-restore
         uses: actions/cache/restore@v4
