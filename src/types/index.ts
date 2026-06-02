@@ -1,5 +1,4 @@
 // ── Config types (user-edited YAML structure) ────────────────────────
-
 export interface GalleryConfig {
   profile: ProfileConfig
   language?: 'en' | 'zh'
@@ -10,6 +9,7 @@ export interface GalleryConfig {
   resume: ResumeConfig
   sync: SyncConfig
   import?: ImportConfig
+  sort?: SortConfig
   projects?: ProjectConfig[]
 }
 
@@ -40,6 +40,7 @@ export interface ProjectConfig {
   demo_url?: string
   screenshots?: string[]
   display?: { stats: 'stars' | 'milestones' | 'none' }
+  sort_weight?: number
   override?: Partial<ExtractedData>
 }
 
@@ -59,11 +60,17 @@ export interface ImportConfig {
   github?: string
   exclude?: string[]
   min_stars?: number
-  exclude_forks?: boolean  // default: true — skip forked repos
+  exclude_forks?: boolean // default: true — skip forked repos
+}
+
+// ── Sort types ───────────────────────────────────────────────────────
+export type SortMode = 'default' | 'stars' | 'forks' | 'watchers' | 'custom'
+
+export interface SortConfig {
+  by: SortMode
 }
 
 // ── Built data types (build output, consumed by frontend) ────────────
-
 export interface GalleryData {
   profile: ProfileData
   resume: ResumeData
@@ -72,6 +79,7 @@ export interface GalleryData {
   theme: GalleryConfig['theme']
   accent?: string
   layout: LayoutConfig
+  sort?: SortConfig
   builtAt: string
 }
 
@@ -102,6 +110,7 @@ export interface ProjectData {
   status: 'active' | 'wip' | 'archived'
   featured: boolean
   display: { stats: 'stars' | 'milestones' | 'none' }
+  sortWeight: number
   stats?: StarsData | MilestonesData
 }
 
@@ -153,7 +162,6 @@ export interface EducationItem {
 }
 
 // ── Provider types (build-time, raw data from platforms) ─────────────
-
 export interface RepoIdentifier {
   platform: 'github' | 'gitee' | 'codeup' | 'gitea'
   owner: string
@@ -169,7 +177,7 @@ export interface RawRepoInfo {
   language?: string
   defaultBranch: string
   sha: string
-  pushedAt?: string  // ISO date, for activity-based status inference
+  pushedAt?: string // ISO date, for activity-based status inference
 }
 
 export interface RawRelease {
@@ -181,5 +189,5 @@ export interface RawRelease {
 export interface ListReposOptions {
   exclude?: string[]
   minStars?: number
-  excludeForks?: boolean  // default: true
+  excludeForks?: boolean // default: true
 }

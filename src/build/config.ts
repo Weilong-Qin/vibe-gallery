@@ -51,6 +51,7 @@ const ProjectConfigSchema = z
     display: z
       .object({ stats: z.enum(['stars', 'milestones', 'none']) })
       .default({ stats: 'stars' }),
+    sort_weight: z.number().default(0),
     override: OverrideSchema.optional(),
   })
   .refine(
@@ -104,6 +105,11 @@ const ImportConfigSchema = z.object({
   exclude_forks: z.boolean().default(true),
 })
 
+// ── Sort ─────────────────────────────────────────────────────────────
+const SortConfigSchema = z.object({
+  by: z.enum(['default', 'stars', 'forks', 'watchers', 'custom']).default('default'),
+})
+
 // ── Root ─────────────────────────────────────────────────────────────
 export const GalleryConfigSchema = z.object({
   profile: ProfileConfigSchema,
@@ -124,6 +130,7 @@ export const GalleryConfigSchema = z.object({
   }),
   sync: SyncConfigSchema.default({ on_push: true, schedule: '0 6 * * 1' }),
   import: ImportConfigSchema.optional(),
+  sort: SortConfigSchema.default({ by: 'default' }),
   projects: z.array(ProjectConfigSchema).optional(),
 })
 
@@ -150,12 +157,12 @@ function formatZodError(err: z.ZodError): string {
   const lines: string[] = ['Invalid gallery config:']
   for (const issue of err.issues) {
     const path = issue.path.length > 0 ? issue.path.join('.') : '(root)'
-    lines.push(` - ${path}: ${issue.message}`)
+    lines.push(`  - ${path}: ${issue.message}`)
   }
   const flat = err.flatten()
   if (flat.formErrors.length > 0) {
     for (const msg of flat.formErrors) {
-      lines.push(` - (root): ${msg}`)
+      lines.push(`  - (root): ${msg}`)
     }
   }
   return lines.join('\n')

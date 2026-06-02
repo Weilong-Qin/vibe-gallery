@@ -9,7 +9,7 @@ import { LangContext } from './i18n.js'
 const data = galleryData as unknown as GalleryData
 
 export default function App() {
-  const { profile, resume, projects, theme, accent, layout, language } = data
+  const { profile, resume, projects, theme, accent, layout, language, sort } = data
 
   const resumeSections = resume.sections && resume.sections.length > 0
     ? resume.sections
@@ -19,7 +19,7 @@ export default function App() {
     skills: resume.skills?.length ? <Skills key="skills" skills={resume.skills} /> : null,
     experience: resume.experience?.length ? <Experience key="experience" experience={resume.experience} /> : null,
     education: resume.education?.length ? <Education key="education" education={resume.education} /> : null,
-    projects: <ProjectGrid key="projects" projects={projects} />,
+    projects: <ProjectGrid key="projects" projects={projects} sort={sort} />,
   }
 
   const isSidebar = layout.page === 'sidebar'

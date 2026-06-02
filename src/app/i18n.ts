@@ -8,6 +8,7 @@ const TRANSLATIONS = {
     featured: 'Featured',
     demo: 'Demo →',
     status: { active: 'Active', wip: 'WIP', archived: 'Archived' },
+    sort: { label: 'Sort', default: 'Default', stars: 'Stars', forks: 'Forks', watchers: 'Watchers', custom: 'Custom' },
   },
   zh: {
     skills: '技能',
@@ -16,6 +17,7 @@ const TRANSLATIONS = {
     featured: '精选',
     demo: '演示 →',
     status: { active: '活跃', wip: '进行中', archived: '已归档' },
+    sort: { label: '排序', default: '默认', stars: 'Star', forks: 'Fork', watchers: 'Watch', custom: '自定义' },
   },
 } as const
 

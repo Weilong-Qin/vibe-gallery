@@ -100,6 +100,16 @@ import:
   # 排除指定仓库，格式：owner/repo
   # exclude: [Weilong-Qin/dotfiles, Weilong-Qin/scratch]
 
+# ─── 排序 ───────────────────────────────────────────────────────────────────────
+# 项目默认排序方式，可在页面上动态切换
+# default: 精选优先，然后按构建顺序
+# stars: 按 Star 数降序
+# forks: 按 Fork 数降序
+# watchers: 按 Watch 数降序
+# custom: 按 sort_weight 降序（需在各项目下配置 sort_weight，值越大越靠前）
+sort:
+  by: default
+
 # ─── 手动指定项目（支持多平台）────────────────────────────────────────────────
 projects:
   - github: Weilong-Qin/vibe-gallery

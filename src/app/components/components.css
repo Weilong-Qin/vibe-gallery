@@ -183,6 +183,59 @@
   text-decoration: line-through;
 }
 
+/* ── Projects sort controls ────────────────────────────── */
+.projects-sort {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.projects-sort__label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.projects-sort__options {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.projects-sort__btn {
+  padding: 4px 12px;
+  border-radius: var(--card-radius);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  background: var(--color-bg);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  line-height: 1.4;
+}
+
+.projects-sort__btn:hover {
+  color: var(--color-text);
+  border-color: var(--color-text-muted);
+}
+
+.projects-sort__btn--active {
+  background: var(--color-accent);
+  color: var(--color-text-inverse);
+  border-color: var(--color-accent);
+}
+
+.projects-sort__btn--active:hover {
+  opacity: 0.9;
+  color: var(--color-text-inverse);
+}
+
 /* ── Project card ──────────────────────────────────────── */
 .project-card {
   background: var(--color-surface);

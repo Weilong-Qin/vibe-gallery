@@ -89,6 +89,7 @@ async function fetchSingleProject(
       status: projectConfig?.status ?? inferStatus(repoInfo.pushedAt),
       featured: projectConfig?.featured ?? false,
       display: { stats: displayStats },
+    sortWeight: projectConfig?.sort_weight ?? 0,
     }
 
     if (displayStats === 'stars') {
@@ -158,6 +159,7 @@ async function main(): Promise<void> {
     theme: config.theme,
     accent: config.accent,
     layout: config.layout,
+    sort: config.sort,
     builtAt: new Date().toISOString(),
   }
 
