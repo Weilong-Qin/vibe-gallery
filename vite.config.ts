@@ -10,7 +10,7 @@ function galleryHtmlMetaPlugin(): Plugin {
     name: 'vibe-gallery-html-meta',
     async transformIndexHtml(html) {
       const dataPath = fileURLToPath(
-        new URL('./src/app/data/gallery.json', import.meta.url),
+        new URL('./src/app/public/gallery.json', import.meta.url),
       )
 
       try {

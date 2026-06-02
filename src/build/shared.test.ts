@@ -10,6 +10,30 @@ import {
 } from './shared.js'
 import type { RepoIdentifier, ProfileConfig, GalleryConfig, ProjectConfig } from '../types/index.js'
 
+const baseGalleryConfig: GalleryConfig = {
+  profile: {
+    name: 'Alice',
+    avatar: 'github',
+  },
+  theme: 'minimal',
+  layout: {
+    page: 'sidebar',
+    projects: 'featured-first',
+    columns: 'auto',
+    density: 'comfortable',
+  },
+  sync: {
+    on_push: true,
+    schedule: '0 6 * * 1',
+  },
+  resume: {
+    sections: ['skills', 'experience', 'education', 'projects'],
+    skills: [],
+    experience: [],
+    education: [],
+  },
+}
+
 describe('inferIcon', () => {
   it('maps known keys to correct icons', () => {
     expect(inferIcon('github')).toBe('github')
@@ -177,14 +201,7 @@ describe('assembleProfile', () => {
 
 describe('buildResumeData', () => {
   it('builds resume data with defaults', () => {
-    const config = {
-      resume: {
-        sections: ['skills', 'experience', 'education', 'projects'] as const,
-        skills: [],
-        experience: [],
-        education: [],
-      },
-    } as GalleryConfig
+    const config = baseGalleryConfig
 
     const result = buildResumeData(config)
     expect(result.sections).toEqual(['skills', 'experience', 'education', 'projects'])
@@ -195,14 +212,14 @@ describe('buildResumeData', () => {
 
   it('includes skills when provided', () => {
     const skills = [{ category: 'Languages', items: ['TypeScript', 'Go'] }]
-    const config = {
+    const config: GalleryConfig = {
+      ...baseGalleryConfig,
       resume: {
-        sections: ['skills'] as const,
+        ...baseGalleryConfig.resume,
+        sections: ['skills'],
         skills,
-        experience: [],
-        education: [],
       },
-    } as GalleryConfig
+    }
 
     const result = buildResumeData(config)
     expect(result.skills).toEqual(skills)
@@ -215,14 +232,14 @@ describe('buildResumeData', () => {
       period: '2020-2024',
       highlights: ['Built things'],
     }]
-    const config = {
+    const config: GalleryConfig = {
+      ...baseGalleryConfig,
       resume: {
-        sections: ['experience'] as const,
-        skills: [],
+        ...baseGalleryConfig.resume,
+        sections: ['experience'],
         experience,
-        education: [],
       },
-    } as GalleryConfig
+    }
 
     const result = buildResumeData(config)
     expect(result.experience).toEqual(experience)
@@ -231,12 +248,13 @@ describe('buildResumeData', () => {
 
 describe('buildProjectConfigMap', () => {
   it('maps projects by their key', () => {
-    const config = {
+    const config: GalleryConfig = {
+      ...baseGalleryConfig,
       projects: [
         { github: 'owner/repo1', featured: true },
         { github: 'owner/repo2', featured: false },
       ],
-    } as GalleryConfig
+    }
 
     const map = buildProjectConfigMap(config)
     expect(map.get('github:owner/repo1')?.featured).toBe(true)
@@ -245,12 +263,13 @@ describe('buildProjectConfigMap', () => {
   })
 
   it('skips invalid project configs', () => {
-    const config = {
+    const config: GalleryConfig = {
+      ...baseGalleryConfig,
       projects: [
         { github: 'invalid-no-slash' },
         { github: 'owner/valid' },
       ],
-    } as GalleryConfig
+    }
 
     const map = buildProjectConfigMap(config)
     expect(map.size).toBe(1)

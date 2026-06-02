@@ -6,6 +6,7 @@ dist/
 
 # Generated data
 src/app/data/gallery.json
+src/app/public/gallery.json
 
 # Environment
 .env

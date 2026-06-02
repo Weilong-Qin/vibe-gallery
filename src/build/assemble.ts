@@ -77,8 +77,8 @@ async function main() {
     builtAt: new Date().toISOString(),
   }
 
-  const outPath = resolve('src/app/data/gallery.json')
-  await fs.mkdir('src/app/data', { recursive: true })
+  const outPath = resolve('src/app/public/gallery.json')
+  await fs.mkdir('src/app/public', { recursive: true })
   await fs.writeFile(outPath, JSON.stringify(galleryData, null, 2))
 
   await writeThemeEntry(config.theme)

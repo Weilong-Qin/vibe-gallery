@@ -1,14 +1,33 @@
-import React from 'react'
-import galleryData from './data/gallery.json'
+import React, { useEffect, useState } from 'react'
 import type { GalleryData } from '../types/index.js'
 import { Layout } from './components/Layout.js'
 import { Profile, Skills, Experience, Education } from './components/resume/index.js'
 import { ProjectGrid } from './components/projects/index.js'
 import { LangContext } from './i18n.js'
+import { defaultGalleryData } from './data/defaultGalleryData.js'
 
-const data = galleryData as unknown as GalleryData
+const galleryDataUrl = `${import.meta.env.BASE_URL}gallery.json`
 
 export default function App() {
+  const [data, setData] = useState<GalleryData>(defaultGalleryData)
+
+  useEffect(() => {
+    let active = true
+
+    fetch(galleryDataUrl)
+      .then((response) => (response.ok ? response.json() : defaultGalleryData))
+      .then((nextData: GalleryData) => {
+        if (active) setData(nextData)
+      })
+      .catch(() => {
+        if (active) setData(defaultGalleryData)
+      })
+
+    return () => {
+      active = false
+    }
+  }, [])
+
   const { profile, resume, projects, theme, accent, layout, language, sort } = data
 
   const resumeSections = resume.sections && resume.sections.length > 0

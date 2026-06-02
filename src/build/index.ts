@@ -162,7 +162,7 @@ async function main(): Promise<void> {
     builtAt: new Date().toISOString(),
   }
 
-  const outPath = resolve(process.cwd(), 'src/app/data/gallery.json')
+  const outPath = resolve(process.cwd(), 'src/app/public/gallery.json')
   await fs.mkdir(dirname(outPath), { recursive: true })
   await fs.writeFile(outPath, JSON.stringify(galleryData, null, 2))
 
