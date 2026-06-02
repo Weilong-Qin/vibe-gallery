@@ -31,6 +31,7 @@ function galleryHtmlMetaPlugin(): Plugin {
 }
 
 export default defineConfig({
+  base: '/vibe-gallery/',
   plugins: [react(), galleryHtmlMetaPlugin()],
   root: 'src/app',
   resolve: {
