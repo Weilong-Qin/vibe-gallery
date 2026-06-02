@@ -15,7 +15,6 @@ import {
   buildResumeData,
   buildProjectConfigMap,
   writeThemeEntry,
-  writeHtmlMeta,
 } from './shared.js'
 import type { GalleryData, ProjectData } from '../types/index.js'
 
@@ -83,7 +82,6 @@ async function main() {
   await fs.writeFile(outPath, JSON.stringify(galleryData, null, 2))
 
   await writeThemeEntry(config.theme)
-  await writeHtmlMeta(galleryData)
 
   console.log(
     `✓ gallery.json assembled (${merged.length} projects from cache)`,

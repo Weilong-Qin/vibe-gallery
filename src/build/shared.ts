@@ -113,17 +113,7 @@ export async function writeThemeEntry(theme: string): Promise<void> {
   await fs.writeFile(cssPath, `@import './${theme}.css';\n`)
 }
 
-export async function writeHtmlMeta(
-  galleryData: GalleryData,
-): Promise<void> {
-  const htmlPath = resolve('src/app/index.html')
-  let html: string
-  try {
-    html = await fs.readFile(htmlPath, 'utf-8')
-  } catch {
-    return
-  }
-
+export function injectHtmlMeta(html: string, galleryData: GalleryData): string {
   const title = `${galleryData.profile.name}'s Gallery`
   const description = galleryData.profile.bio
     ? galleryData.profile.bio.slice(0, 160)
@@ -167,7 +157,7 @@ export async function writeHtmlMeta(
     `    ${metaLines}\n  </head>`,
   )
 
-  await fs.writeFile(htmlPath, html)
+  return html
 }
 
 function escapeHtml(str: string): string {

@@ -14,7 +14,6 @@ import {
   buildResumeData,
   buildProjectConfigMap,
   writeThemeEntry,
-  writeHtmlMeta,
 } from './shared.js'
 import type {
   GalleryData,
@@ -168,7 +167,6 @@ async function main(): Promise<void> {
   await fs.writeFile(outPath, JSON.stringify(galleryData, null, 2))
 
   await writeThemeEntry(config.theme)
-  await writeHtmlMeta(galleryData)
 
   console.log(`✓ gallery.json written (${projects.length} projects)`)
 }
