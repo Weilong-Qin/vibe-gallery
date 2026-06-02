@@ -130,7 +130,7 @@ theme: terminal            # minimal | grid | magazine | terminal
 accent: "#00ff88"          # optional hex color override
 
 layout:
-  page: sidebar            # single-column | sidebar | hero
+  page: sidebar            # single-column | sidebar | hero | wide
   projects: featured-first # grid | masonry | list | featured-first
   columns: 2               # 1 | 2 | 3 | auto
   density: comfortable     # compact | comfortable | spacious
@@ -228,6 +228,7 @@ Layout is composed from four independent dimensions — pick one value from each
   - `single-column` — everything stacked, classic long-form.
   - `sidebar` — profile/resume on the left, projects on the right.
   - `hero` — large profile block above a projects section.
+- `wide` — wide layout, profile and resume side-by-side at the top, projects fill the full width below.
 - **`projects`** — how project cards are arranged.
   - `grid` — uniform columns.
   - `masonry` — Pinterest-style variable heights.

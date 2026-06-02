@@ -8,7 +8,7 @@ import { createProvider } from './providers/index.js'
 
 // ── Layout ───────────────────────────────────────────────────────────
 const LayoutConfigSchema = z.object({
-  page: z.enum(['single-column', 'sidebar', 'hero']).default('sidebar'),
+  page: z.enum(['single-column', 'sidebar', 'hero', 'wide']).default('sidebar'),
   projects: z
     .enum(['grid', 'masonry', 'list', 'featured-first'])
     .default('featured-first'),

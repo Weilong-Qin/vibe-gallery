@@ -32,8 +32,8 @@ export async function init() {
     const github = (await prompt(rl, 'GitHub username (for auto-import, optional): ')).trim()
     const themeInput = (await prompt(rl, 'Theme [minimal/grid/magazine/terminal] (default: terminal): ')).trim().toLowerCase()
     const theme = ['minimal', 'grid', 'magazine', 'terminal'].includes(themeInput) ? themeInput : 'terminal'
-    const layoutInput = (await prompt(rl, 'Page layout [single-column/sidebar/hero] (default: sidebar): ')).trim().toLowerCase()
-    const pageLayout = ['single-column', 'sidebar', 'hero'].includes(layoutInput) ? layoutInput : 'sidebar'
+    const layoutInput = (await prompt(rl, 'Page layout [single-column/sidebar/hero/wide] (default: sidebar): ')).trim().toLowerCase()
+    const pageLayout = ['single-column', 'sidebar', 'hero', 'wide'].includes(layoutInput) ? layoutInput : 'sidebar'
 
     const configYaml = `profile:
   name: "${name}"${bio ? `\n  bio: "${bio}"` : ''}

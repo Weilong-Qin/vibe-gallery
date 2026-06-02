@@ -14,7 +14,7 @@ export interface GalleryConfig {
 }
 
 export interface LayoutConfig {
-  page: 'single-column' | 'sidebar' | 'hero'
+  page: 'single-column' | 'sidebar' | 'hero' | 'wide'
   projects: 'grid' | 'masonry' | 'list' | 'featured-first'
   columns: 1 | 2 | 3 | 'auto'
   density: 'compact' | 'comfortable' | 'spacious'

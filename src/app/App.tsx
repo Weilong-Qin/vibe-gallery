@@ -23,6 +23,7 @@ export default function App() {
   }
 
   const isSidebar = layout.page === 'sidebar'
+  const isWide = layout.page === 'wide'
 
   return (
     <LangContext.Provider value={language ?? 'en'}>
@@ -53,6 +54,21 @@ export default function App() {
               </div>
             </div>
           </>
+        ) : isWide ? (
+          <div className="page-root">
+            <div className="wide-header">
+              <aside>
+                <Profile profile={profile} />
+              </aside>
+              <div className="wide-header__bio">
+                {resumeSections
+                  .filter((s) => s !== 'projects')
+                  .map((s) => sectionComponents[s])
+                  .filter(Boolean)}
+              </div>
+            </div>
+            <main>{sectionComponents['projects']}</main>
+          </div>
         ) : (
           <div className="page-root">
             <Profile profile={profile} />

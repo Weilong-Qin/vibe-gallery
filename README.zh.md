@@ -130,7 +130,7 @@ theme: terminal            # minimal | grid | magazine | terminal
 accent: "#00ff88"          # 可选，自定义强调色（十六进制）
 
 layout:
-  page: sidebar            # single-column | sidebar | hero
+  page: sidebar            # single-column | sidebar | hero | wide
   projects: featured-first # grid | masonry | list | featured-first
   columns: 2               # 1 | 2 | 3 | auto
   density: comfortable     # compact | comfortable | spacious
@@ -226,6 +226,7 @@ sync:
   - `single-column` — 所有内容垂直堆叠
   - `sidebar` — 左侧个人信息/简历，右侧项目列表
   - `hero` — 顶部大图个人简介，下方项目区
+- `wide` — 宽体布局，顶部横向排列个人信息与简历，下方项目区充分利用页面空间
 - **`projects`** — 项目卡片排列方式
   - `grid` — 等宽网格
   - `masonry` — 瀑布流（高度可变）

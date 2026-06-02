@@ -19,7 +19,7 @@ theme: terminal            # minimal | grid | magazine | terminal
 accent: "#00ff88"          # optional hex color
 
 layout:
-  page: sidebar            # single-column | sidebar | hero
+  page: sidebar            # single-column | sidebar | hero | wide
   projects: featured-first # grid | masonry | list | featured-first
   columns: 2               # 1 | 2 | 3 | auto
   density: comfortable     # compact | comfortable | spacious
