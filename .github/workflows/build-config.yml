@@ -39,6 +39,8 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
       - name: Install dependencies
         run: npm ci
       - name: Run tests
@@ -63,7 +65,7 @@ jobs:
       - name: Build frontend
         run: npm run build:app
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: dist
 
